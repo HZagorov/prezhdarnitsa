@@ -6,8 +6,8 @@ import { ProductCard } from "@/components/ProductCard";
 type Sort = "popular" | "price-asc" | "price-desc" | "name";
 
 export const Route = createFileRoute("/katalog")({
-  validateSearch: (search: Record<string, unknown>) => ({
-    kategoriq: (search.kategoriq as Category | "vsichki") || "vsichki",
+  validateSearch: (search: Record<string, unknown>): { kategoriq?: Category | "vsichki" } => ({
+    kategoriq: (search["kategoriq"] as Category | "vsichki") || "vsichki",
   }),
   head: () => ({
     meta: [
