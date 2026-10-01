@@ -10,33 +10,115 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as KatalogRouteImport } from './routes/katalog'
+import { Route as KolichkaRouteImport } from './routes/kolichka'
+import { Route as KontaktiRouteImport } from './routes/kontakti'
+import { Route as PorachkaRouteImport } from './routes/porachka'
+import { Route as ZaNasRouteImport } from './routes/za-nas'
+import { Route as ProduktIdRouteImport } from './routes/produkt.$id'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const KatalogRoute = KatalogRouteImport.update({
+  id: '/katalog',
+  path: '/katalog',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const KolichkaRoute = KolichkaRouteImport.update({
+  id: '/kolichka',
+  path: '/kolichka',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const KontaktiRoute = KontaktiRouteImport.update({
+  id: '/kontakti',
+  path: '/kontakti',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PorachkaRoute = PorachkaRouteImport.update({
+  id: '/porachka',
+  path: '/porachka',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ZaNasRoute = ZaNasRouteImport.update({
+  id: '/za-nas',
+  path: '/za-nas',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ProduktIdRoute = ProduktIdRouteImport.update({
+  id: '/produkt/$id',
+  path: '/produkt/$id',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/katalog': typeof KatalogRoute
+  '/kolichka': typeof KolichkaRoute
+  '/kontakti': typeof KontaktiRoute
+  '/porachka': typeof PorachkaRoute
+  '/za-nas': typeof ZaNasRoute
+  '/produkt/$id': typeof ProduktIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/katalog': typeof KatalogRoute
+  '/kolichka': typeof KolichkaRoute
+  '/kontakti': typeof KontaktiRoute
+  '/porachka': typeof PorachkaRoute
+  '/za-nas': typeof ZaNasRoute
+  '/produkt/$id': typeof ProduktIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/katalog': typeof KatalogRoute
+  '/kolichka': typeof KolichkaRoute
+  '/kontakti': typeof KontaktiRoute
+  '/porachka': typeof PorachkaRoute
+  '/za-nas': typeof ZaNasRoute
+  '/produkt/$id': typeof ProduktIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    | '/'
+    | '/katalog'
+    | '/kolichka'
+    | '/kontakti'
+    | '/porachka'
+    | '/za-nas'
+    | '/produkt/$id'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to:
+    | '/'
+    | '/katalog'
+    | '/kolichka'
+    | '/kontakti'
+    | '/porachka'
+    | '/za-nas'
+    | '/produkt/$id'
+  id:
+    | '__root__'
+    | '/'
+    | '/katalog'
+    | '/kolichka'
+    | '/kontakti'
+    | '/porachka'
+    | '/za-nas'
+    | '/produkt/$id'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  KatalogRoute: typeof KatalogRoute
+  KolichkaRoute: typeof KolichkaRoute
+  KontaktiRoute: typeof KontaktiRoute
+  PorachkaRoute: typeof PorachkaRoute
+  ZaNasRoute: typeof ZaNasRoute
+  ProduktIdRoute: typeof ProduktIdRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -48,11 +130,59 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/katalog': {
+      id: '/katalog'
+      path: '/katalog'
+      fullPath: '/katalog'
+      preLoaderRoute: typeof KatalogRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/kolichka': {
+      id: '/kolichka'
+      path: '/kolichka'
+      fullPath: '/kolichka'
+      preLoaderRoute: typeof KolichkaRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/kontakti': {
+      id: '/kontakti'
+      path: '/kontakti'
+      fullPath: '/kontakti'
+      preLoaderRoute: typeof KontaktiRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/porachka': {
+      id: '/porachka'
+      path: '/porachka'
+      fullPath: '/porachka'
+      preLoaderRoute: typeof PorachkaRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/za-nas': {
+      id: '/za-nas'
+      path: '/za-nas'
+      fullPath: '/za-nas'
+      preLoaderRoute: typeof ZaNasRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/produkt/$id': {
+      id: '/produkt/$id'
+      path: '/produkt/$id'
+      fullPath: '/produkt/$id'
+      preLoaderRoute: typeof ProduktIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  KatalogRoute: KatalogRoute,
+  KolichkaRoute: KolichkaRoute,
+  KontaktiRoute: KontaktiRoute,
+  PorachkaRoute: PorachkaRoute,
+  ZaNasRoute: ZaNasRoute,
+  ProduktIdRoute: ProduktIdRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
