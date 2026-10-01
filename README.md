@@ -1,6 +1,4 @@
-# Bulgarian Buddy
-
-разбираш ли български?
+# Prezhdarnitsa
 
 This project was built with [Lovable](https://lovable.dev).
 
