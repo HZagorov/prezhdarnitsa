@@ -66,6 +66,17 @@ export const PRODUCTS: Product[] = [
     details: ["100% антипилинг акрил", "50 г / 165 м", "Препоръчителни игли: 3–3.5 мм", "Сертифицирана за бебета"],
   },
   {
+    id: "gazzal-baby-cotton",
+    name: "Памучна прежда „GAZZAL Baby Cotton“",
+    category: "prezhdi",
+    price: 4.0,
+    image: gazzalBabyCotton,
+    description:
+      "Нежна памучна бебешка прежда GAZZAL Baby Cotton — мека, дишаща и приятна на допир. Подходяща за бебешки плетива, летни дрехи, шапки и амигуруми.",
+    details: ["100% памук", "50 г / 165 м", "Препоръчителни игли: 3–4 мм", "Пере се на 30°"],
+    badge: "Ново",
+  },
+  {
     id: "tekstilna-prezhda-koral",
     name: "Текстилна прежда „Корал“",
     category: "prezhdi",
