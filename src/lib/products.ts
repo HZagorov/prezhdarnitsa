@@ -6,6 +6,7 @@ import shal from "@/assets/products/shal.jpg";
 import chanta from "@/assets/products/chanta.jpg";
 import kuki from "@/assets/products/kuki.jpg";
 import bebeMenta from "@/assets/products/bebe-menta.jpg";
+import gazzalBabyCotton from "@/assets/products/gazzal-baby-cotton.jpg";
 import shapka from "@/assets/products/shapka.jpg";
 import tekstilnaKoral from "@/assets/products/tekstilna-koral.jpg";
 import drazhki from "@/assets/products/drazhki.jpg";
@@ -63,6 +64,17 @@ export const PRODUCTS: Product[] = [
     description:
       "Премиум бебешка прежда в свежа мента — супер мека и безопасна за нежната бебешка кожа. Пере се лесно и съхне бързо.",
     details: ["100% антипилинг акрил", "50 г / 165 м", "Препоръчителни игли: 3–3.5 мм", "Сертифицирана за бебета"],
+  },
+  {
+    id: "gazzal-baby-cotton",
+    name: "Памучна прежда „GAZZAL Baby Cotton“",
+    category: "prezhdi",
+    price: 4.0,
+    image: gazzalBabyCotton,
+    description:
+      "Нежна памучна бебешка прежда GAZZAL Baby Cotton — мека, дишаща и приятна на допир. Подходяща за бебешки плетива, летни дрехи, шапки и амигуруми.",
+    details: ["100% памук", "50 г / 165 м", "Препоръчителни игли: 3–4 мм", "Пере се на 30°"],
+    badge: "Ново",
   },
   {
     id: "tekstilna-prezhda-koral",
