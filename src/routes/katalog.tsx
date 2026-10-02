@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
-import { CATEGORIES, PRODUCTS, type Category } from "@/lib/products";
+import { CATEGORIES, formatPrice, PRODUCTS, type Category } from "@/lib/products";
 import { ProductCard } from "@/components/ProductCard";
 
 type Sort = "popular" | "price-asc" | "price-desc" | "name";
