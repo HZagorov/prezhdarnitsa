@@ -24,7 +24,7 @@ export interface Product {
   id: string;
   name: string;
   category: Category;
-  price: number; // в лева
+  price: number; // в евро
   oldPrice?: number;
   image: string;
   description: string;
@@ -165,11 +165,9 @@ export const PRODUCTS: Product[] = [
   },
 ];
 
-// Цените се съхраняват в лева и се показват в евро (фиксиран курс 1 € = 1,95583 лв.)
-const BGN_PER_EUR = 1.95583;
-
-export function formatPrice(priceBgn: number): string {
-  return `${(priceBgn / BGN_PER_EUR).toFixed(2).replace(".", ",")} €`;
+// Всички цени в проекта са в евро
+export function formatPrice(priceEur: number): string {
+  return `${priceEur.toFixed(2).replace(".", ",")} €`;
 }
 
 export function getProduct(id: string): Product | undefined {
