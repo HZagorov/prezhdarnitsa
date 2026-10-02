@@ -6,6 +6,7 @@ import shal from "@/assets/products/shal.jpg";
 import chanta from "@/assets/products/chanta.jpg";
 import kuki from "@/assets/products/kuki.jpg";
 import bebeMenta from "@/assets/products/bebe-menta.jpg";
+import gazzalBabyCotton from "@/assets/products/gazzal-baby-cotton.jpg";
 import shapka from "@/assets/products/shapka.jpg";
 import tekstilnaKoral from "@/assets/products/tekstilna-koral.jpg";
 import drazhki from "@/assets/products/drazhki.jpg";
