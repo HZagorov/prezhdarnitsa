@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
-import { CATEGORIES, PRODUCTS, type Category } from "@/lib/products";
+import { CATEGORIES, formatPrice, PRODUCTS, type Category } from "@/lib/products";
 import { ProductCard } from "@/components/ProductCard";
 
 type Sort = "popular" | "price-asc" | "price-desc" | "name";
@@ -74,7 +74,7 @@ function CatalogPage() {
 
       <div className="mt-4 flex flex-wrap items-center gap-6 rounded-2xl bg-card p-4">
         <label className="flex items-center gap-3 text-sm font-bold">
-          Цена до: <span className="text-primary">{maxPrice} лв.</span>
+          Цена до: <span className="text-primary">{formatPrice(maxPrice)}</span>
           <input
             type="range"
             min={5}
