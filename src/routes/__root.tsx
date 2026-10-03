@@ -159,18 +159,18 @@ function Header() {
         <Link
           to="/"
           className="flex shrink-0 items-center gap-2 sm:gap-3"
-          aria-label="Violeta — AVA Boutique, art &amp; hobby"
+          aria-label="AVA Boutique, art &amp; hobby — Violeta"
         >
           <img
-            src={violetaAsset.url}
-            alt="Violeta"
+            src={logoAsset.url}
+            alt="AVA Boutique — art &amp; hobby"
             className="h-14 w-auto object-contain sm:h-20"
             draggable={false}
           />
           <span className="h-8 w-px bg-border sm:h-12" aria-hidden="true" />
           <img
-            src={logoAsset.url}
-            alt="AVA Boutique — art &amp; hobby"
+            src={violetaAsset.url}
+            alt="Violeta"
             className="h-14 w-auto object-contain sm:h-20"
             draggable={false}
           />
