@@ -158,7 +158,7 @@ function Header() {
       <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-4 py-2 sm:py-3">
         <Link
           to="/"
-          className="flex shrink-0 items-center gap-2 sm:gap-3"
+          className="flex shrink-0 items-start gap-2 sm:gap-3"
           aria-label="AVA Boutique, art &amp; hobby — Violeta, handmade bags"
         >
           <img
@@ -167,7 +167,7 @@ function Header() {
             className="h-14 w-auto object-contain sm:h-20"
             draggable={false}
           />
-          <span className="h-8 w-px bg-border sm:h-12" aria-hidden="true" />
+          <span className="mt-3 h-8 w-px self-start bg-border sm:mt-4 sm:h-12" aria-hidden="true" />
           <span className="flex flex-col items-center gap-1">
             <img
               src={violetaAsset.url}
