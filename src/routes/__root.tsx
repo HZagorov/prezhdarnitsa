@@ -154,12 +154,12 @@ function Header() {
   const [open, setOpen] = useState(false);
   return (
     <header className="sticky top-0 z-50 border-b border-border bg-background/90 backdrop-blur">
-      <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-4 py-3">
+      <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-4 py-2 sm:py-3">
         <Link to="/" className="flex shrink-0 items-center" aria-label="AVA Boutique — art &amp; hobby">
           <img
             src={logoAsset.url}
             alt="AVA Boutique — art &amp; hobby"
-            className="h-14 w-auto object-contain"
+            className="h-16 w-auto object-contain sm:h-20"
             draggable={false}
           />
         </Link>
