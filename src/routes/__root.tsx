@@ -164,10 +164,11 @@ function Header() {
           <img
             src={logoAsset.url}
             alt="AVA Boutique — art &amp; hobby"
-            className="h-[88px] w-auto object-contain sm:h-[118px]"
+            className="h-20 w-auto object-contain sm:h-[108px]"
             draggable={false}
           />
-          <span className="self-center h-12 w-px bg-border sm:h-20" aria-hidden="true" />
+          <span className="self-center h-16 w-px bg-border sm:h-24" aria-hidden="true" />
+
 
           <span className="flex flex-col items-center gap-1">
             <img
