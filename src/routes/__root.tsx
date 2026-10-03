@@ -159,7 +159,7 @@ function Header() {
         <Link
           to="/"
           className="flex shrink-0 items-center gap-2 sm:gap-3"
-          aria-label="AVA Boutique, art &amp; hobby — Violeta"
+          aria-label="AVA Boutique, art &amp; hobby — Violeta, handmade bags"
         >
           <img
             src={logoAsset.url}
@@ -168,12 +168,17 @@ function Header() {
             draggable={false}
           />
           <span className="h-8 w-px bg-border sm:h-12" aria-hidden="true" />
-          <img
-            src={violetaAsset.url}
-            alt="Violeta"
-            className="h-14 w-auto object-contain sm:h-20"
-            draggable={false}
-          />
+          <span className="flex flex-col items-center gap-1">
+            <img
+              src={violetaAsset.url}
+              alt="Violeta"
+              className="h-14 w-auto object-contain sm:h-20"
+              draggable={false}
+            />
+            <span className="text-[10px] font-extrabold tracking-[0.18em] text-primary/70 sm:text-xs">
+              handmade bags
+            </span>
+          </span>
         </Link>
         <nav className="hidden items-center gap-1 md:flex">
           {NAV.map((item) => (
