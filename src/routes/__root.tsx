@@ -167,7 +167,7 @@ function Header() {
             className="h-14 w-auto object-contain sm:h-20"
             draggable={false}
           />
-          <span className="hidden h-12 w-px bg-border sm:block" aria-hidden="true" />
+          <span className="h-8 w-px bg-border sm:h-12" aria-hidden="true" />
           <img
             src={logoAsset.url}
             alt="AVA Boutique — art &amp; hobby"
