@@ -164,10 +164,12 @@ function Header() {
           <img
             src={logoAsset.url}
             alt="AVA Boutique — art &amp; hobby"
-            className="h-14 w-auto object-contain sm:h-20"
+            className="h-20 w-auto object-contain sm:h-[108px]"
             draggable={false}
           />
-          <span className="mt-3 h-8 w-px self-start bg-border sm:mt-4 sm:h-12" aria-hidden="true" />
+          <span className="self-center h-16 w-px bg-border sm:h-24" aria-hidden="true" />
+
+
           <span className="flex flex-col items-center gap-1">
             <img
               src={violetaAsset.url}
