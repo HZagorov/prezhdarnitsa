@@ -15,6 +15,7 @@ import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
 import { CartProvider, useCart } from "../lib/cart";
 import logoAsset from "../assets/logo.png.asset.json";
+import violetaAsset from "../assets/violeta.png.asset.json";
 
 function NotFoundComponent() {
   return (
@@ -155,11 +156,22 @@ function Header() {
   return (
     <header className="sticky top-0 z-50 border-b border-border bg-background/90 backdrop-blur">
       <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-4 py-2 sm:py-3">
-        <Link to="/" className="flex shrink-0 items-center" aria-label="AVA Boutique — art &amp; hobby">
+        <Link
+          to="/"
+          className="flex shrink-0 items-center gap-2 sm:gap-3"
+          aria-label="Violeta — AVA Boutique, art &amp; hobby"
+        >
+          <img
+            src={violetaAsset.url}
+            alt="Violeta"
+            className="h-14 w-auto object-contain sm:h-20"
+            draggable={false}
+          />
+          <span className="hidden h-12 w-px bg-border sm:block" aria-hidden="true" />
           <img
             src={logoAsset.url}
             alt="AVA Boutique — art &amp; hobby"
-            className="h-16 w-auto object-contain sm:h-20"
+            className="h-14 w-auto object-contain sm:h-20"
             draggable={false}
           />
         </Link>
