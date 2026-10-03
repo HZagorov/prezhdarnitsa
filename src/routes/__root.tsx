@@ -14,6 +14,7 @@ import { ShoppingBasket, Menu, X, Heart } from "lucide-react";
 import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
 import { CartProvider, useCart } from "../lib/cart";
+import logoAsset from "../assets/logo.png.asset.json";
 
 function NotFoundComponent() {
   return (
@@ -94,7 +95,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     ],
     links: [
       { rel: "stylesheet", href: appCss },
-      { rel: "icon", href: "/favicon.ico", type: "image/x-icon" },
+      { rel: "icon", type: "image/png", href: "/favicon.png" },
       { rel: "preconnect", href: "https://fonts.googleapis.com" },
       { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
       {
@@ -153,10 +154,14 @@ function Header() {
   const [open, setOpen] = useState(false);
   return (
     <header className="sticky top-0 z-50 border-b border-border bg-background/90 backdrop-blur">
-      <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-4 py-3">
-        <Link to="/" className="flex items-center gap-2">
-          <span className="flex h-10 w-10 items-center justify-center rounded-full bg-secondary text-xl">🧶</span>
-          <span className="font-display text-2xl font-extrabold text-primary">Преждарница</span>
+      <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-4 py-2 sm:py-3">
+        <Link to="/" className="flex shrink-0 items-center" aria-label="AVA Boutique — art &amp; hobby">
+          <img
+            src={logoAsset.url}
+            alt="AVA Boutique — art &amp; hobby"
+            className="h-16 w-auto object-contain sm:h-20"
+            draggable={false}
+          />
         </Link>
         <nav className="hidden items-center gap-1 md:flex">
           {NAV.map((item) => (
