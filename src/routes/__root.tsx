@@ -155,7 +155,7 @@ function Header() {
   const [open, setOpen] = useState(false);
   return (
     <header className="sticky top-0 z-50 border-b border-border bg-background/90 backdrop-blur">
-      <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-4 py-2 sm:py-3">
+      <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-4 pb-4 pt-2 sm:pb-4 sm:pt-3">
         <Link
           to="/"
           className="flex shrink-0 items-start gap-2 sm:gap-3"
