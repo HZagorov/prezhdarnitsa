@@ -29,6 +29,10 @@ function ProductPage() {
   const { add } = useCart();
   const [qty, setQty] = useState(1);
   const [added, setAdded] = useState(false);
+  const [activeImg, setActiveImg] = useState(0);
+
+  const images = product.gallery && product.gallery.length > 0 ? product.gallery : [product.image];
+  const shown = Math.min(activeImg, images.length - 1);
 
   const category = CATEGORIES.find((c) => c.id === product.category);
   const similar = PRODUCTS.filter((p) => p.category === product.category && p.id !== product.id).slice(0, 4);
@@ -52,14 +56,34 @@ function ProductPage() {
       </nav>
 
       <div className="mt-6 grid gap-10 md:grid-cols-2">
-        <div className="overflow-hidden rounded-[2rem] border border-border bg-card">
-          <img
-            src={product.image}
-            alt={product.name}
-            width={816}
-            height={816}
-            className="aspect-square w-full object-cover"
-          />
+        <div>
+          <div className="overflow-hidden rounded-[2rem] border border-border bg-card">
+            <img
+              src={images[shown]}
+              alt={product.name}
+              width={816}
+              height={816}
+              className="aspect-square w-full object-cover"
+            />
+          </div>
+          {images.length > 1 && (
+            <div className="mt-3 flex gap-3">
+              {images.map((src, i) => (
+                <button
+                  key={src}
+                  type="button"
+                  onClick={() => setActiveImg(i)}
+                  aria-label={`Снимка ${i + 1} на ${product.name}`}
+                  aria-current={i === shown}
+                  className={`h-20 w-20 overflow-hidden rounded-2xl border-2 transition-all ${
+                    i === shown ? "border-primary" : "border-border opacity-80 hover:border-primary/60 hover:opacity-100"
+                  }`}
+                >
+                  <img src={src} alt="" width={816} height={816} className="h-full w-full object-cover" />
+                </button>
+              ))}
+            </div>
+          )}
         </div>
         <div>
           {product.badge && (
