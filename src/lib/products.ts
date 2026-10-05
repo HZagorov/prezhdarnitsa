@@ -1,16 +1,13 @@
+// ============= Full file contents =============
+
 import pamuchnaRozova from "@/assets/products/pamuchna-rozova.jpg";
 import plushenaSinya from "@/assets/products/plushena-sinya.jpg";
-import zaeche from "@/assets/products/zaeche.jpg";
 import makrameLavandula from "@/assets/products/makrame-lavandula.jpg";
-import shal from "@/assets/products/shal.jpg";
-import chanta from "@/assets/products/chanta.jpg";
-import chantaRafia from "@/assets/products/chanta-rafia.jpg";
 import chantaPayeti from "@/assets/products/chanta-payeti.png.asset.json";
 import chantaPayeti2 from "@/assets/products/chanta-payeti-2.png.asset.json";
 import kuki from "@/assets/products/kuki.jpg";
 import bebeMenta from "@/assets/products/bebe-menta.jpg";
 import gazzalBabyCotton from "@/assets/products/gazzal-baby-cotton.jpg";
-import shapka from "@/assets/products/shapka.jpg";
 import tekstilnaKoral from "@/assets/products/tekstilna-koral.jpg";
 import drazhki from "@/assets/products/drazhki.jpg";
 
@@ -19,7 +16,7 @@ export type Category = "prezhdi" | "makrame" | "gotovi" | "aksesoari";
 export const CATEGORIES: { id: Category; name: string; description: string }[] = [
   { id: "prezhdi", name: "Прежди", description: "Памучна, плюшена, бебешка и текстилна прежда" },
   { id: "makrame", name: "Макраме", description: "Памучно и полиестерово макраме в красиви цветове" },
-  { id: "gotovi", name: "Готови артикули", description: "Ръчно плетени шалове, шапки, чанти и играчки" },
+  { id: "gotovi", name: "Готови артикули", description: "Ръчно плетени чанти и други артикули" },
   { id: "aksesoari", name: "Аксесоари", description: "Куки, дръжки, основи и всичко за вашите проекти" },
 ];
 
@@ -104,49 +101,6 @@ export const PRODUCTS: Product[] = [
     badge: "Хит",
   },
   {
-    id: "pleteno-zaeche",
-    name: "Плетено зайче „Рози“",
-    category: "gotovi",
-    price: 39.9,
-    image: zaeche,
-    description:
-      "Ръчно плетено зайче амигуруми с розова пелеринка и цветенце. Всяко е уникално и е изработено с много любов — чудесен подарък за малки и големи.",
-    details: ["Ръчна изработка", "Височина: 25 см", "Безопасни очи", "Пере се на ръка"],
-    badge: "Хит",
-  },
-  {
-    id: "pleten-shal",
-    name: "Ръчно плетен шал „Пудрови ивици“",
-    category: "gotovi",
-    price: 54.9,
-    image: shal,
-    description:
-      "Топъл и мек шал с ресни в розово и кремаво. Плетен на ръка от дебела мека прежда — уютът, който заслужавате през студените дни.",
-    details: ["Ръчна изработка", "Дължина: 180 см", "Смесена прежда с вълна", "Пере се на ръка"],
-  },
-  {
-    id: "pletena-chanta",
-    name: "Плетена чанта „Лятно небе“",
-    category: "gotovi",
-    price: 64.9,
-    image: chanta,
-    description:
-      "Елегантна ръчно плетена чанта в синьо и кремаво с дървени дръжки. Стабилна, просторна и с неповторим ръчен чар.",
-    details: ["Ръчна изработка", "Памучен шнур", "Дървени дръжки", "Размери: 35 × 30 см"],
-    badge: "Ново",
-  },
-  {
-    id: "pletena-chanta-rafia",
-    name: "Плетена чанта от рафия „Лятен пазар“",
-    category: "gotovi",
-    price: 69.9,
-    image: chantaRafia,
-    description:
-      "Просторна ръчно плетена чанта от естествена рафия в топъл пясъчен нюанс. Лека, здрава и с дълги удобни дръжки — перфектна за плажа, пазара и летните разходки.",
-    details: ["Ръчна изработка", "100% естествена рафия", "Дълги дръжки за носене на рамо", "Размери: 40 × 32 см"],
-    badge: "Ново",
-  },
-  {
     id: "pletena-chanta-payeti",
     name: "Плетена чанта с пайети „Бежов блясък“",
     category: "gotovi",
@@ -157,16 +111,6 @@ export const PRODUCTS: Product[] = [
       "Ефектна ръчно плетена чанта тип торбичка в нежно бежово, украсена с кръгли пайети и кожена връзка. Плетената дръжка с метални вериги придава завършен и елегантен вид.",
     details: ["Ръчна изработка", "Пайети в бежово и розово злато", "Плетена дръжка с метални вериги", "Кожена връзка с панделка"],
     badge: "Ново",
-  },
-  {
-    id: "pletena-shapka",
-    name: "Плетена шапка с помпон „Пудра“",
-    category: "gotovi",
-    price: 29.9,
-    image: shapka,
-    description:
-      "Мека плетена шапка в прашно розово с пухкав помпон. Топла, удобна и много мила — любимият зимен аксесоар.",
-    details: ["Ръчна изработка", "Мека акрилна прежда", "Универсален размер", "Пере се на ръка"],
   },
   {
     id: "komplekt-kuki",
