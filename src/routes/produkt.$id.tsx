@@ -56,14 +56,34 @@ function ProductPage() {
       </nav>
 
       <div className="mt-6 grid gap-10 md:grid-cols-2">
-        <div className="overflow-hidden rounded-[2rem] border border-border bg-card">
-          <img
-            src={product.image}
-            alt={product.name}
-            width={816}
-            height={816}
-            className="aspect-square w-full object-cover"
-          />
+        <div>
+          <div className="overflow-hidden rounded-[2rem] border border-border bg-card">
+            <img
+              src={images[shown]}
+              alt={product.name}
+              width={816}
+              height={816}
+              className="aspect-square w-full object-cover"
+            />
+          </div>
+          {images.length > 1 && (
+            <div className="mt-3 flex gap-3">
+              {images.map((src, i) => (
+                <button
+                  key={src}
+                  type="button"
+                  onClick={() => setActiveImg(i)}
+                  aria-label={`Снимка ${i + 1} на ${product.name}`}
+                  aria-current={i === shown}
+                  className={`h-20 w-20 overflow-hidden rounded-2xl border-2 transition-all ${
+                    i === shown ? "border-primary" : "border-border opacity-80 hover:border-primary/60 hover:opacity-100"
+                  }`}
+                >
+                  <img src={src} alt="" width={816} height={816} className="h-full w-full object-cover" />
+                </button>
+              ))}
+            </div>
+          )}
         </div>
         <div>
           {product.badge && (
