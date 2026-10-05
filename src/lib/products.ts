@@ -4,6 +4,7 @@ import zaeche from "@/assets/products/zaeche.jpg";
 import makrameLavandula from "@/assets/products/makrame-lavandula.jpg";
 import shal from "@/assets/products/shal.jpg";
 import chanta from "@/assets/products/chanta.jpg";
+import chantaRafia from "@/assets/products/chanta-rafia.jpg";
 import chantaPayeti from "@/assets/products/chanta-payeti.png.asset.json";
 import kuki from "@/assets/products/kuki.jpg";
 import bebeMenta from "@/assets/products/bebe-menta.jpg";
@@ -130,6 +131,17 @@ export const PRODUCTS: Product[] = [
     description:
       "Елегантна ръчно плетена чанта в синьо и кремаво с дървени дръжки. Стабилна, просторна и с неповторим ръчен чар.",
     details: ["Ръчна изработка", "Памучен шнур", "Дървени дръжки", "Размери: 35 × 30 см"],
+    badge: "Ново",
+  },
+  {
+    id: "pletena-chanta-rafia",
+    name: "Плетена чанта от рафия „Лятен пазар“",
+    category: "gotovi",
+    price: 69.9,
+    image: chantaRafia,
+    description:
+      "Просторна ръчно плетена чанта от естествена рафия в топъл пясъчен нюанс. Лека, здрава и с дълги удобни дръжки — перфектна за плажа, пазара и летните разходки.",
+    details: ["Ръчна изработка", "100% естествена рафия", "Дълги дръжки за носене на рамо", "Размери: 40 × 32 см"],
     badge: "Ново",
   },
   {
