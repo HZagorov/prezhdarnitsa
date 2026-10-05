@@ -29,6 +29,10 @@ function ProductPage() {
   const { add } = useCart();
   const [qty, setQty] = useState(1);
   const [added, setAdded] = useState(false);
+  const [activeImg, setActiveImg] = useState(0);
+
+  const images = product.gallery && product.gallery.length > 0 ? product.gallery : [product.image];
+  const shown = Math.min(activeImg, images.length - 1);
 
   const category = CATEGORIES.find((c) => c.id === product.category);
   const similar = PRODUCTS.filter((p) => p.category === product.category && p.id !== product.id).slice(0, 4);

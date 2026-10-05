@@ -6,6 +6,7 @@ import shal from "@/assets/products/shal.jpg";
 import chanta from "@/assets/products/chanta.jpg";
 import chantaRafia from "@/assets/products/chanta-rafia.jpg";
 import chantaPayeti from "@/assets/products/chanta-payeti.png.asset.json";
+import chantaPayeti2 from "@/assets/products/chanta-payeti-2.png.asset.json";
 import kuki from "@/assets/products/kuki.jpg";
 import bebeMenta from "@/assets/products/bebe-menta.jpg";
 import gazzalBabyCotton from "@/assets/products/gazzal-baby-cotton.jpg";
@@ -29,6 +30,7 @@ export interface Product {
   price: number; // в евро
   oldPrice?: number;
   image: string;
+  gallery?: string[]; // допълнителни снимки на артикула
   description: string;
   details: string[];
   badge?: "Ново" | "Хит" | "Промоция";
@@ -149,7 +151,8 @@ export const PRODUCTS: Product[] = [
     name: "Плетена чанта с пайети „Бежов блясък“",
     category: "gotovi",
     price: 79.9,
-    image: chantaPayeti.url,
+    image: chantaPayeti2.url,
+    gallery: [chantaPayeti2.url, chantaPayeti.url],
     description:
       "Ефектна ръчно плетена чанта тип торбичка в нежно бежово, украсена с кръгли пайети и кожена връзка. Плетената дръжка с метални вериги придава завършен и елегантен вид.",
     details: ["Ръчна изработка", "Пайети в бежово и розово злато", "Плетена дръжка с метални вериги", "Кожена връзка с панделка"],
