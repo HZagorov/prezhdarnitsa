@@ -5,6 +5,8 @@ import plushenaSinya from "@/assets/products/plushena-sinya.jpg";
 import makrameLavandula from "@/assets/products/makrame-lavandula.jpg";
 import chantaPayeti from "@/assets/products/chanta-payeti.png.asset.json";
 import chantaPayeti2 from "@/assets/products/chanta-payeti-2.png.asset.json";
+import chantaSini from "@/assets/products/chanta-sini.png.asset.json";
+import chantaSini2 from "@/assets/products/chanta-sini-2.png.asset.json";
 import kuki from "@/assets/products/kuki.jpg";
 import bebeMenta from "@/assets/products/bebe-menta.jpg";
 import gazzalBabyCotton from "@/assets/products/gazzal-baby-cotton.jpg";
@@ -117,6 +119,27 @@ export const PRODUCTS: Product[] = [
       "Дължина: 30 см",
       "Ширина: 17 см",
       "Височина: 24 см",
+    ],
+    badge: "Ново",
+  },
+  {
+    id: "pletena-chanta-sini",
+    name: "Плетена чанта „Син прибой“",
+    category: "gotovi",
+    price: 89.9,
+    image: chantaSini.url,
+    gallery: [chantaSini.url, chantaSini2.url],
+    description:
+      "Ръчно плетена чанта в наситено синьо с каре от синьо и пръснато розово, с дебела плетена дръжка и метална пръчка по горния ръб. Просторна и здрава — удобна за всеки ден.",
+    details: [
+      "Ръчна изработка",
+      "Дебела памучна връв",
+      "Плетена дръжка с метални накрайници",
+      "Метална пръчка по горния ръб",
+      "Дължина: 35 см",
+      "Ширина: 15 см",
+      "Височина: 24 см",
+      "Височина с дръжката: 46 см",
     ],
     badge: "Ново",
   },
