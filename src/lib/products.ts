@@ -7,6 +7,8 @@ import chantaPayeti from "@/assets/products/chanta-payeti.png.asset.json";
 import chantaPayeti2 from "@/assets/products/chanta-payeti-2.png.asset.json";
 import chantaSini from "@/assets/products/chanta-sini.png.asset.json";
 import chantaSini2 from "@/assets/products/chanta-sini-2.png.asset.json";
+import chantaCherna from "@/assets/products/chanta-cherna.png.asset.json";
+import chantaCherna2 from "@/assets/products/chanta-cherna-2.png.asset.json";
 import kuki from "@/assets/products/kuki.jpg";
 import bebeMenta from "@/assets/products/bebe-menta.jpg";
 import gazzalBabyCotton from "@/assets/products/gazzal-baby-cotton.jpg";
@@ -139,6 +141,16 @@ export const PRODUCTS: Product[] = [
       "Височина: 24 см",
       "Височина с дръжката: 46 см",
     ],
+    badge: "Ново",
+  },
+  {
+    id: "pletena-chanta-cherna",
+    name: "Плетена чанта „Черна нощ“",
+    category: "gotovi",
+    price: 84.9,
+    image: chantaCherna.url,
+    gallery: [chantaCherna.url, chantaCherna2.url],
+    details: ["Ширина: 37 см", "Дълбочина: 22 см", "Височина с дръжката: 44 см"],
     badge: "Ново",
   },
   {
