@@ -30,7 +30,7 @@ export interface Product {
   oldPrice?: number;
   image: string;
   gallery?: string[]; // допълнителни снимки на артикула
-  description: string;
+  description?: string;
   details: string[];
   badge?: "Ново" | "Хит" | "Промоция";
 }
@@ -129,8 +129,6 @@ export const PRODUCTS: Product[] = [
     price: 89.9,
     image: chantaSini.url,
     gallery: [chantaSini.url, chantaSini2.url],
-    description:
-      "Ръчно плетена чанта в наситено синьо с каре от синьо и пръснато розово, с дебела плетена дръжка и метална пръчка по горния ръб. Просторна и здрава — удобна за всеки ден.",
     details: [
       "Ръчна изработка",
       "Дебела памучна връв",
