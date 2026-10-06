@@ -9,6 +9,7 @@ import chantaSini from "@/assets/products/chanta-sini.png.asset.json";
 import chantaSini2 from "@/assets/products/chanta-sini-2.png.asset.json";
 import chantaCherna from "@/assets/products/chanta-cherna.png.asset.json";
 import chantaCherna2 from "@/assets/products/chanta-cherna-2.png.asset.json";
+import chantaSharenoKare from "@/assets/products/chanta-shareno-kare.png.asset.json";
 import kuki from "@/assets/products/kuki.jpg";
 import bebeMenta from "@/assets/products/bebe-menta.jpg";
 import gazzalBabyCotton from "@/assets/products/gazzal-baby-cotton.jpg";
