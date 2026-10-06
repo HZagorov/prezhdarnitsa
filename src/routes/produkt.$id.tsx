@@ -15,9 +15,9 @@ export const Route = createFileRoute("/produkt/$id")({
     meta: loaderData
       ? [
           { title: `${loaderData.name} — Преждарница` },
-          { name: "description", content: loaderData.description },
+          { name: "description", content: loaderData.description ?? loaderData.details.join(", ") },
           { property: "og:title", content: `${loaderData.name} — Преждарница` },
-          { property: "og:description", content: loaderData.description },
+          { property: "og:description", content: loaderData.description ?? loaderData.details.join(", ") },
         ]
       : [{ title: "Продукт — Преждарница" }],
   }),
@@ -98,7 +98,7 @@ function ProductPage() {
               <span className="text-lg text-muted-foreground line-through">{formatPrice(product.oldPrice)}</span>
             )}
           </div>
-          <p className="mt-4 leading-relaxed text-muted-foreground">{product.description}</p>
+          {product.description && <p className="mt-4 leading-relaxed text-muted-foreground">{product.description}</p>}
 
           <ul className="mt-5 space-y-2">
             {product.details.map((d) => (
