@@ -147,7 +147,7 @@ export const PRODUCTS: Product[] = [
     id: "pletena-chanta-cherna",
     name: "Плетена чанта „Черна нощ“",
     category: "gotovi",
-    price: 84.9,
+    price: 45,
     image: chantaCherna.url,
     gallery: [chantaCherna.url, chantaCherna2.url],
     details: ["Ширина: 37 см", "Дълбочина: 22 см", "Височина с дръжката: 44 см"],
