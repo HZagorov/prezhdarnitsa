@@ -155,6 +155,15 @@ export const PRODUCTS: Product[] = [
     badge: "Ново",
   },
   {
+    id: "pletena-chanta-shareno-kare",
+    name: "Плетена чанта „Шарено каре“",
+    category: "gotovi",
+    price: 55,
+    image: chantaSharenoKare.url,
+    details: ["Ширина: 24 см", "Дълбочина: 13 см", "Височина: 18 см", "Височина с дръжката: 33 см"],
+    badge: "Ново",
+  },
+  {
     id: "komplekt-kuki",
     name: "Комплект ергономични куки 2–6 мм",
     category: "aksesoari",
