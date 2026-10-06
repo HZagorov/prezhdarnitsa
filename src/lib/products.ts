@@ -9,6 +9,7 @@ import chantaSini from "@/assets/products/chanta-sini.png.asset.json";
 import chantaSini2 from "@/assets/products/chanta-sini-2.png.asset.json";
 import chantaCherna from "@/assets/products/chanta-cherna.png.asset.json";
 import chantaCherna2 from "@/assets/products/chanta-cherna-2.png.asset.json";
+import chantaSharenoKare from "@/assets/products/chanta-shareno-kare.png.asset.json";
 import kuki from "@/assets/products/kuki.jpg";
 import bebeMenta from "@/assets/products/bebe-menta.jpg";
 import gazzalBabyCotton from "@/assets/products/gazzal-baby-cotton.jpg";
@@ -151,6 +152,15 @@ export const PRODUCTS: Product[] = [
     image: chantaCherna.url,
     gallery: [chantaCherna.url, chantaCherna2.url],
     details: ["Ширина: 37 см", "Дълбочина: 22 см", "Височина с дръжката: 44 см"],
+    badge: "Ново",
+  },
+  {
+    id: "pletena-chanta-shareno-kare",
+    name: "Плетена чанта „Шарено каре“",
+    category: "gotovi",
+    price: 55,
+    image: chantaSharenoKare.url,
+    details: ["Ширина: 24 см", "Дълбочина: 13 см", "Височина: 18 см", "Височина с дръжката: 33 см"],
     badge: "Ново",
   },
   {
