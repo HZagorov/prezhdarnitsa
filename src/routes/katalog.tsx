@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
-import { CATEGORIES, formatPrice, PRODUCTS, type Category } from "@/lib/products";
+import { CATEGORIES, formatPrice, PRODUCTS, YARN_SUBCATEGORIES, type Category } from "@/lib/products";
 import { ProductCard } from "@/components/ProductCard";
 
 type Sort = "popular" | "price-asc" | "price-desc" | "name";
@@ -28,10 +28,12 @@ function CatalogPage() {
   const navigate = Route.useNavigate();
   const [sort, setSort] = useState<Sort>("popular");
   const [maxPrice, setMaxPrice] = useState(100);
+  const [sub, setSub] = useState<string>("vsichki");
 
   const filtered = useMemo(() => {
     let list = PRODUCTS.filter((p) => p.price <= maxPrice);
     if (kategoriq !== "vsichki") list = list.filter((p) => p.category === kategoriq);
+    if (kategoriq === "prezhdi" && sub !== "vsichki") list = list.filter((p) => p.sub === sub);
     switch (sort) {
       case "price-asc":
         return [...list].sort((a, b) => a.price - b.price);
@@ -42,7 +44,7 @@ function CatalogPage() {
       default:
         return list;
     }
-  }, [kategoriq, sort, maxPrice]);
+  }, [kategoriq, sort, maxPrice, sub]);
 
   return (
     <div className="mx-auto max-w-6xl px-4 py-10">
@@ -71,6 +73,24 @@ function CatalogPage() {
           </button>
         ))}
       </div>
+
+      {/* Подкатегории за прежди */}
+      {kategoriq === "prezhdi" && (
+        <div className="mt-3 flex flex-wrap items-center gap-2 pl-2">
+          <span className="text-sm font-bold text-muted-foreground">Подкатегория:</span>
+          {[{ id: "vsichki", name: "Всички" }, ...YARN_SUBCATEGORIES].map((subCat) => (
+            <button
+              key={subCat.id}
+              onClick={() => setSub(subCat.id)}
+              className={`rounded-full px-3 py-1.5 text-sm font-bold transition-colors ${
+                sub === subCat.id ? "bg-secondary text-secondary-foreground" : "bg-card text-foreground hover:bg-muted"
+              }`}
+            >
+              {subCat.name}
+            </button>
+          ))}
+        </div>
+      )}
 
       <div className="mt-4 flex flex-wrap items-center gap-6 rounded-2xl bg-card p-4">
         <label className="flex items-center gap-3 text-sm font-bold">
