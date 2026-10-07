@@ -74,6 +74,24 @@ function CatalogPage() {
         ))}
       </div>
 
+      {/* Подкатегории за прежди */}
+      {kategoriq === "prezhdi" && (
+        <div className="mt-3 flex flex-wrap items-center gap-2 pl-2">
+          <span className="text-sm font-bold text-muted-foreground">Подкатегория:</span>
+          {[{ id: "vsichki", name: "Всички" }, ...YARN_SUBCATEGORIES].map((subCat) => (
+            <button
+              key={subCat.id}
+              onClick={() => setSub(subCat.id)}
+              className={`rounded-full px-3 py-1.5 text-sm font-bold transition-colors ${
+                sub === subCat.id ? "bg-secondary text-secondary-foreground" : "bg-card text-foreground hover:bg-muted"
+              }`}
+            >
+              {subCat.name}
+            </button>
+          ))}
+        </div>
+      )}
+
       <div className="mt-4 flex flex-wrap items-center gap-6 rounded-2xl bg-card p-4">
         <label className="flex items-center gap-3 text-sm font-bold">
           Цена до: <span className="text-primary">{formatPrice(maxPrice)}</span>
