@@ -25,10 +25,17 @@ export const CATEGORIES: { id: Category; name: string; description: string }[] =
   { id: "aksesoari", name: "Аксесоари", description: "Куки, дръжки, основи и всичко за вашите проекти" },
 ];
 
+// Подкатегории за „Прежди“
+export const YARN_SUBCATEGORIES: { id: string; name: string }[] = [
+  { id: "pamuk", name: "100% памук" },
+  { id: "vlna", name: "100% вълна" },
+];
+
 export interface Product {
   id: string;
   name: string;
   category: Category;
+  sub?: string; // подкатегория (за прежди)
   price: number; // в евро
   oldPrice?: number;
   image: string;
@@ -43,6 +50,7 @@ export const PRODUCTS: Product[] = [
     id: "pamuchna-prezhda-rozova",
     name: "Памучна прежда „Розова нежност“",
     category: "prezhdi",
+    sub: "pamuk",
     price: 6.9,
     image: pamuchnaRozova,
     description:
@@ -75,6 +83,7 @@ export const PRODUCTS: Product[] = [
     id: "gazzal-baby-cotton",
     name: "Памучна прежда „GAZZAL Baby Cotton“",
     category: "prezhdi",
+    sub: "pamuk",
     price: 4.0,
     image: gazzalBabyCotton,
     description:
