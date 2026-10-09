@@ -100,7 +100,7 @@ export const getProducts = createServerFn({ method: "GET" }).handler(async () =>
 });
 
 export const getProductById = createServerFn({ method: "GET" })
-  .inputValidator((id: string) => id)
+  .validator((id: string) => id)
   .handler(async ({ data: id }) => {
     const { data, error } = await supabase
       .from("products")
