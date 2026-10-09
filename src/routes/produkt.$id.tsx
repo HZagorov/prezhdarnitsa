@@ -1,13 +1,14 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { useState } from "react";
 import { ShoppingBasket, Check, Minus, Plus, Truck, RotateCcw } from "lucide-react";
-import { CATEGORIES, formatPrice, getProduct, PRODUCTS } from "@/lib/products";
+import { CATEGORIES, formatPrice, getProductById } from "@/lib/products";
+import { useProducts } from "@/lib/products-context";
 import { useCart } from "@/lib/cart";
 import { ProductCard } from "@/components/ProductCard";
 
 export const Route = createFileRoute("/produkt/$id")({
-  loader: ({ params }) => {
-    const product = getProduct(params.id);
+  loader: async ({ params }) => {
+    const product = await getProductById({ data: params.id });
     if (!product) throw notFound();
     return product;
   },
@@ -26,6 +27,7 @@ export const Route = createFileRoute("/produkt/$id")({
 
 function ProductPage() {
   const product = Route.useLoaderData();
+  const products = useProducts();
   const { add } = useCart();
   const [qty, setQty] = useState(1);
   const [added, setAdded] = useState(false);
@@ -35,7 +37,7 @@ function ProductPage() {
   const shown = Math.min(activeImg, images.length - 1);
 
   const category = CATEGORIES.find((c) => c.id === product.category);
-  const similar = PRODUCTS.filter((p) => p.category === product.category && p.id !== product.id).slice(0, 4);
+  const similar = products.filter((p) => p.category === product.category && p.id !== product.id).slice(0, 4);
 
   const handleAdd = () => {
     add(product.id, qty);

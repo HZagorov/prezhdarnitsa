@@ -14,6 +14,8 @@ import { ShoppingBasket, Menu, X, Heart } from "lucide-react";
 import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
 import { CartProvider, useCart } from "../lib/cart";
+import { getProducts } from "../lib/products";
+import { ProductsProvider } from "../lib/products-context";
 import logoAsset from "../assets/logo.png.asset.json";
 import violetaAsset from "../assets/violeta.png.asset.json";
 
@@ -76,6 +78,7 @@ function ErrorComponent({ error, reset }: ErrorComponentProps) {
 }
 
 export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()({
+  loader: () => getProducts(),
   head: () => ({
     meta: [
       { charSet: "utf-8" },
@@ -274,18 +277,21 @@ function Footer() {
 
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
+  const products = Route.useLoaderData();
 
   return (
     <QueryClientProvider client={queryClient}>
-      <CartProvider>
-        <div className="flex min-h-screen flex-col">
-          <Header />
-          <main className="flex-1">
-            <Outlet />
-          </main>
-          <Footer />
-        </div>
-      </CartProvider>
+      <ProductsProvider products={products}>
+        <CartProvider>
+          <div className="flex min-h-screen flex-col">
+            <Header />
+            <main className="flex-1">
+              <Outlet />
+            </main>
+            <Footer />
+          </div>
+        </CartProvider>
+      </ProductsProvider>
     </QueryClientProvider>
   );
 }

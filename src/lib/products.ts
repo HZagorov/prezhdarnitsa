@@ -1,5 +1,4 @@
-// ============= Full file contents =============
-
+import { createServerFn } from "@tanstack/react-start";
 import pamuchnaRozova from "@/assets/products/pamuchna-rozova.jpg";
 import plushenaSinya from "@/assets/products/plushena-sinya.jpg";
 import makrameLavandula from "@/assets/products/makrame-lavandula.jpg";
@@ -15,6 +14,8 @@ import bebeMenta from "@/assets/products/bebe-menta.jpg";
 import gazzalBabyCotton from "@/assets/products/gazzal-baby-cotton.jpg";
 import tekstilnaKoral from "@/assets/products/tekstilna-koral.jpg";
 import drazhki from "@/assets/products/drazhki.jpg";
+import { supabase } from "@/integrations/supabase/client";
+import type { Database } from "@/integrations/supabase/types";
 
 export type Category = "prezhdi" | "makrame" | "gotovi" | "aksesoari";
 
@@ -25,7 +26,6 @@ export const CATEGORIES: { id: Category; name: string; description: string }[] =
   { id: "aksesoari", name: "Аксесоари", description: "Куки, дръжки, основи и всичко за вашите проекти" },
 ];
 
-// Подкатегории за „Прежди“
 export const YARN_SUBCATEGORIES: { id: string; name: string }[] = [
   { id: "pamuk", name: "100% памук" },
   { id: "vlna", name: "100% вълна" },
@@ -35,172 +35,84 @@ export interface Product {
   id: string;
   name: string;
   category: Category;
-  sub?: string; // подкатегория (за прежди)
-  price: number; // в евро
+  sub?: string;
+  price: number;
   oldPrice?: number;
   image: string;
-  gallery?: string[]; // допълнителни снимки на артикула
+  gallery?: string[];
   description?: string;
   details: string[];
   badge?: "Ново" | "Хит" | "Промоция";
 }
 
-export const PRODUCTS: Product[] = [
-  {
-    id: "pamuchna-prezhda-rozova",
-    name: "Памучна прежда „Розова нежност“",
-    category: "prezhdi",
-    sub: "pamuk",
-    price: 6.9,
-    image: pamuchnaRozova,
-    description:
-      "100% памучна прежда в нежно розово — мека, дишаща и издръжлива. Идеална за летни дрехи, бебешки плетива и амигуруми играчки.",
-    details: ["100% памук", "50 г / 125 м", "Препоръчителни игли: 3–4 мм", "Пере се в пералня на 30°"],
-    badge: "Хит",
-  },
-  {
-    id: "plushena-prezhda-sinya",
-    name: "Плюшена прежда „Небесно синьо“",
-    category: "prezhdi",
-    price: 8.5,
-    image: plushenaSinya,
-    description:
-      "Изключително мека плюшена прежда с кадифено усещане. Перфектна за пухкави одеяла, шапки и плюшени играчки.",
-    details: ["100% полиестер", "100 г / 120 м", "Препоръчителни игли: 6–8 мм", "Хипоалергенна"],
-    badge: "Ново",
-  },
-  {
-    id: "bebe-prezhda-menta",
-    name: "Бебешка прежда „Мента“",
-    category: "prezhdi",
-    price: 5.9,
-    image: bebeMenta,
-    description:
-      "Премиум бебешка прежда в свежа мента — супер мека и безопасна за нежната бебешка кожа. Пере се лесно и съхне бързо.",
-    details: ["100% антипилинг акрил", "50 г / 165 м", "Препоръчителни игли: 3–3.5 мм", "Сертифицирана за бебета"],
-  },
-  {
-    id: "gazzal-baby-cotton",
-    name: "Памучна прежда „GAZZAL Baby Cotton“",
-    category: "prezhdi",
-    sub: "pamuk",
-    price: 4.0,
-    image: gazzalBabyCotton,
-    description:
-      "Нежна памучна бебешка прежда GAZZAL Baby Cotton — мека, дишаща и приятна на допир. Подходяща за бебешки плетива, летни дрехи, шапки и амигуруми.",
-    details: ["100% памук", "50 г / 165 м", "Препоръчителни игли: 3–4 мм", "Пере се на 30°"],
-    badge: "Ново",
-  },
-  {
-    id: "tekstilna-prezhda-koral",
-    name: "Текстилна прежда „Корал“",
-    category: "prezhdi",
-    price: 9.9,
-    oldPrice: 12.9,
-    image: tekstilnaKoral,
-    description:
-      "Еластична текстилна прежда в жизнерадостен коралов цвят. Страхотна за чанти, кошници, панери и килимчета.",
-    details: ["Рециклиран памук с еластан", "Около 700 г / 120 м", "Кука: 8–10 мм", "Стойна и устойчива"],
-    badge: "Промоция",
-  },
-  {
-    id: "makrame-lavandula",
-    name: "Памучно макраме „Лавандула“ 3 мм",
-    category: "makrame",
-    price: 14.9,
-    image: makrameLavandula,
-    description:
-      "Усукано памучно въже за макраме в приказна лавандула. Меко, здраво и лесно за работа — за панери, декорации и чанти.",
-    details: ["100% памук", "3 мм / 200 м", "Не се разплита лесно", "Подходящо за начинаещи"],
-    badge: "Хит",
-  },
-  {
-    id: "pletena-chanta-payeti",
-    name: "Плетена чанта с пайети „Бежов блясък“",
-    category: "gotovi",
-    price: 79.9,
-    image: chantaPayeti2.url,
-    gallery: [chantaPayeti2.url, chantaPayeti.url],
-    description:
-      "Ефектна ръчно плетена чанта тип торбичка в нежно бежово, украсена с кръгли пайети и кожена връзка. Плетената дръжка с метални вериги придава завършен и елегантен вид.",
-    details: [
-      "Ръчна изработка",
-      "Пайети в бежово и розово злато",
-      "Плетена дръжка с метални вериги",
-      "Кожена връзка с панделка",
-      "Дължина: 30 см",
-      "Ширина: 17 см",
-      "Височина: 24 см",
-    ],
-    badge: "Ново",
-  },
-  {
-    id: "pletena-chanta-sini",
-    name: "Плетена чанта „Син прибой“",
-    category: "gotovi",
-    price: 89.9,
-    image: chantaSini.url,
-    gallery: [chantaSini.url, chantaSini2.url],
-    details: [
-      "Ръчна изработка",
-      "Дебела памучна връв",
-      "Плетена дръжка с метални накрайници",
-      "Метална пръчка по горния ръб",
-      "Дължина: 35 см",
-      "Ширина: 15 см",
-      "Височина: 24 см",
-      "Височина с дръжката: 46 см",
-    ],
-    badge: "Ново",
-  },
-  {
-    id: "pletena-chanta-cherna",
-    name: "Плетена чанта „Черна нощ“",
-    category: "gotovi",
-    price: 45,
-    image: chantaCherna.url,
-    gallery: [chantaCherna.url, chantaCherna2.url],
-    details: ["Ширина: 37 см", "Дълбочина: 22 см", "Височина с дръжката: 44 см"],
-    badge: "Ново",
-  },
-  {
-    id: "pletena-chanta-shareno-kare",
-    name: "Плетена чанта „Шарено каре“",
-    category: "gotovi",
-    price: 55,
-    image: chantaSharenoKare.url,
-    details: ["Ширина: 24 см", "Дълбочина: 13 см", "Височина: 18 см", "Височина с дръжката: 33 см"],
-    badge: "Ново",
-  },
-  {
-    id: "komplekt-kuki",
-    name: "Комплект ергономични куки 2–6 мм",
-    category: "aksesoari",
-    price: 24.9,
-    oldPrice: 29.9,
-    image: kuki,
-    description:
-      "Комплект от 11 ергономични куки с меки пастелни дръжки. Удобни дори при дълго плетене — ръцете ви ще ви благодарят.",
-    details: ["11 размера: 2.0–6.0 мм", "Меки силиконови дръжки", "Алуминиеви върхове", "Практичен калъф"],
-    badge: "Промоция",
-  },
-  {
-    id: "durveni-druzhki-osnova",
-    name: "Дървени дръжки и основа за чанта",
-    category: "aksesoari",
-    price: 16.9,
-    image: drazhki,
-    description:
-      "Комплект дървени дръжки и кръгла основа от шперплат за плетена чанта, с кожен етикет „Handmade“. Здравина и стил за вашия проект.",
-    details: ["Естествено дърво", "Основа Ø 20 см с отвори", "2 дръжки", "Кожен етикет в комплекта"],
-  },
-];
+type ProductRow = Database["public"]["Tables"]["products"]["Row"];
 
-// Всички цени в проекта са в евро
-export function formatPrice(priceEur: number): string {
-  return `${priceEur.toFixed(2).replace(".", ",")} €`;
+const IMAGE_URLS: Record<string, string> = {
+  pamuchnaRozova,
+  plushenaSinya,
+  makrameLavandula,
+  chantaPayeti: chantaPayeti.url,
+  chantaPayeti2: chantaPayeti2.url,
+  chantaSini: chantaSini.url,
+  chantaSini2: chantaSini2.url,
+  chantaCherna: chantaCherna.url,
+  chantaCherna2: chantaCherna2.url,
+  chantaSharenoKare: chantaSharenoKare.url,
+  kuki,
+  bebeMenta,
+  gazzalBabyCotton,
+  tekstilnaKoral,
+  drazhki,
+};
+
+function resolveImage(imageKey: string): string {
+  return IMAGE_URLS[imageKey] ?? imageKey;
 }
 
-export function getProduct(id: string): Product | undefined {
-  return PRODUCTS.find((p) => p.id === id);
+function toProduct(row: ProductRow): Product {
+  return {
+    id: row.id,
+    name: row.name,
+    category: row.category as Category,
+    ...(row.subcategory ? { sub: row.subcategory } : {}),
+    price: row.price,
+    ...(row.old_price !== null ? { oldPrice: row.old_price } : {}),
+    image: resolveImage(row.image_key),
+    ...(row.gallery_keys.length > 0
+      ? { gallery: row.gallery_keys.map(resolveImage) }
+      : {}),
+    ...(row.description ? { description: row.description } : {}),
+    details: row.details,
+    ...(row.badge ? { badge: row.badge as Product["badge"] } : {}),
+  };
+}
+
+export const getProducts = createServerFn({ method: "GET" }).handler(async () => {
+  const { data, error } = await supabase
+    .from("products")
+    .select("*")
+    .eq("is_active", true)
+    .order("sort_order")
+    .order("name");
+
+  if (error) throw new Error(`Could not load products: ${error.message}`);
+  return data.map(toProduct);
+});
+
+export const getProductById = createServerFn({ method: "GET" })
+  .inputValidator((id: string) => id)
+  .handler(async ({ data: id }) => {
+    const { data, error } = await supabase
+      .from("products")
+      .select("*")
+      .eq("id", id)
+      .eq("is_active", true)
+      .maybeSingle();
+
+    if (error) throw new Error(`Could not load product: ${error.message}`);
+    return data ? toProduct(data) : undefined;
+  });
+
+export function formatPrice(priceEur: number): string {
+  return `${priceEur.toFixed(2).replace(".", ",")} €`;
 }

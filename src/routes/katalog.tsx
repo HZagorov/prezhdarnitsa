@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
-import { CATEGORIES, formatPrice, PRODUCTS, YARN_SUBCATEGORIES, type Category } from "@/lib/products";
+import { CATEGORIES, formatPrice, YARN_SUBCATEGORIES, type Category } from "@/lib/products";
+import { useProducts } from "@/lib/products-context";
 import { ProductCard } from "@/components/ProductCard";
 
 type Sort = "popular" | "price-asc" | "price-desc" | "name";
@@ -24,6 +25,7 @@ export const Route = createFileRoute("/katalog")({
 });
 
 function CatalogPage() {
+  const products = useProducts();
   const { kategoriq } = Route.useSearch();
   const navigate = Route.useNavigate();
   const [sort, setSort] = useState<Sort>("popular");
@@ -31,7 +33,7 @@ function CatalogPage() {
   const [sub, setSub] = useState<string>("vsichki");
 
   const filtered = useMemo(() => {
-    let list = PRODUCTS.filter((p) => p.price <= maxPrice);
+    let list = products.filter((p) => p.price <= maxPrice);
     if (kategoriq !== "vsichki") list = list.filter((p) => p.category === kategoriq);
     if (kategoriq === "prezhdi" && sub !== "vsichki") list = list.filter((p) => p.sub === sub);
     switch (sort) {
@@ -44,7 +46,7 @@ function CatalogPage() {
       default:
         return list;
     }
-  }, [kategoriq, sort, maxPrice, sub]);
+  }, [products, kategoriq, sort, maxPrice, sub]);
 
   return (
     <div className="mx-auto max-w-6xl px-4 py-10">

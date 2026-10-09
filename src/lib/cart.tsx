@@ -1,5 +1,6 @@
 import { createContext, useContext, useEffect, useState, type ReactNode } from "react";
-import { getProduct, type Product } from "./products";
+import { type Product } from "./products";
+import { useProducts } from "./products-context";
 
 export interface CartItem {
   productId: string;
@@ -21,6 +22,7 @@ const CartContext = createContext<CartContextValue | null>(null);
 const STORAGE_KEY = "prezhdi-cart";
 
 export function CartProvider({ children }: { children: ReactNode }) {
+  const products = useProducts();
   const [items, setItems] = useState<CartItem[]>([]);
   const [hydrated, setHydrated] = useState(false);
 
@@ -59,7 +61,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
   const clear = () => setItems([]);
 
   const detailed = items
-    .map((i) => ({ product: getProduct(i.productId), qty: i.qty }))
+    .map((i) => ({ product: products.find((product) => product.id === i.productId), qty: i.qty }))
     .filter((i): i is { product: Product; qty: number } => Boolean(i.product));
 
   const count = items.reduce((s, i) => s + i.qty, 0);

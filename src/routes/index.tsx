@@ -1,7 +1,8 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { Truck, HeartHandshake, Sparkles, ArrowRight } from "lucide-react";
 import hero from "@/assets/hero.jpg";
-import { CATEGORIES, PRODUCTS } from "@/lib/products";
+import { CATEGORIES } from "@/lib/products";
+import { useProducts } from "@/lib/products-context";
 import { ProductCard } from "@/components/ProductCard";
 
 export const Route = createFileRoute("/")({
@@ -31,7 +32,8 @@ const CATEGORY_COLORS: Record<string, string> = {
 };
 
 function HomePage() {
-  const featured = PRODUCTS.filter((p) => p.badge).slice(0, 4);
+  const products = useProducts();
+  const featured = products.filter((p) => p.badge).slice(0, 4);
 
   return (
     <div>
