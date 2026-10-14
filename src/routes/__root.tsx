@@ -16,8 +16,10 @@ import { reportLovableError } from "../lib/lovable-error-reporting";
 import { CartProvider, useCart } from "../lib/cart";
 import { getProducts } from "../lib/products";
 import { ProductsProvider } from "../lib/products-context";
-import logoAsset from "../assets/logo.png.asset.json";
-import violetaAsset from "../assets/violeta.png.asset.json";
+//import logoAsset from "../assets/logo.png.asset.json";
+//import violetaAsset from "../assets/violeta.png.asset.json";
+import logoAsset from "../assets/logo.png";
+import violetaAsset from "../assets/violeta.png";
 
 function NotFoundComponent() {
   return (
@@ -165,7 +167,7 @@ function Header() {
           aria-label="AVA Boutique, art &amp; hobby — Violeta, handmade bags"
         >
           <img
-            src={logoAsset.url}
+            src={logoAsset}
             alt="AVA Boutique — art &amp; hobby"
             className="h-20 w-auto object-contain sm:h-[108px]"
             draggable={false}
@@ -175,7 +177,7 @@ function Header() {
 
           <span className="flex flex-col items-center gap-1">
             <img
-              src={violetaAsset.url}
+              src={violetaAsset}
               alt="Violeta"
               className="h-14 w-auto object-contain sm:h-20"
               draggable={false}
