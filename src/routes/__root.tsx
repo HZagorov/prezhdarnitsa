@@ -9,7 +9,7 @@ import {
 } from "@tanstack/react-router";
 import type { ErrorComponentProps } from "@tanstack/react-router";
 import { useEffect, useState, type ReactNode } from "react";
-import { ShoppingBasket, Menu, X, Heart } from "lucide-react";
+import { ShoppingBasket, Menu, X, Heart, UserRound } from "lucide-react";
 
 import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
@@ -174,7 +174,6 @@ function Header() {
           />
           <span className="self-center h-16 w-px bg-border sm:h-24" aria-hidden="true" />
 
-
           <span className="flex flex-col items-center gap-1">
             <img
               src={violetaAsset}
@@ -204,6 +203,14 @@ function Header() {
           ))}
         </nav>
         <div className="flex items-center gap-2">
+          <Link
+            to="/vhod"
+            className="inline-flex items-center gap-2 rounded-full border border-primary px-3 py-2 text-sm font-bold text-primary transition-colors hover:bg-primary hover:text-primary-foreground"
+            aria-label="Вход или регистрация"
+          >
+            <UserRound className="h-5 w-5" />
+            <span className="hidden sm:inline">Вход</span>
+          </Link>
           <CartButton />
           <button
             className="rounded-full p-2 hover:bg-muted md:hidden"
