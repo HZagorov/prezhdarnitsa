@@ -21,7 +21,7 @@ type AuthMode = "login" | "signup";
 
 function AuthPage() {
   const navigate = useNavigate();
-  const [mode, setMode] = useState<AuthMode>("signup");
+  const [mode, setMode] = useState<AuthMode>("login");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -75,10 +75,18 @@ function AuthPage() {
     setLoading(false);
 
     if (result.error) {
-      setError(result.error.message);
+      if (result.error.code === "over_email_send_rate_limit") {
+        setError(
+          "Извършили сте твърде много опити за регистрация с този имейл адрес. Моля, опитайте отново след известно време.",
+        );
+      } else if (result.error.code === "invalid_credentials") {
+        setError("Невалидни имейл адрес или парола.");
+      } else {
+        setError(result.error.message);
+      }
+
       return;
     }
-
     if (mode === "signup" && !result.data.session) {
       setMessage("Профилът е създаден! Проверете имейла си, за да потвърдите регистрацията.");
       setPassword("");
@@ -142,17 +150,6 @@ function AuthPage() {
               <button
                 type="button"
                 role="tab"
-                aria-selected={mode === "signup"}
-                onClick={() => switchMode("signup")}
-                className={`cursor-pointer rounded-full px-3 py-2 text-sm font-extrabold transition-transform hover:scale-105 ${
-                  mode === "signup" ? "bg-card text-primary shadow-sm" : "text-muted-foreground"
-                }`}
-              >
-                Регистрация
-              </button>
-              <button
-                type="button"
-                role="tab"
                 aria-selected={mode === "login"}
                 onClick={() => switchMode("login")}
                 className={`cursor-pointer rounded-full px-3 py-2 text-sm font-extrabold transition-transform hover:scale-105 ${
@@ -160,6 +157,17 @@ function AuthPage() {
                 }`}
               >
                 Вход
+              </button>
+              <button
+                type="button"
+                role="tab"
+                aria-selected={mode === "signup"}
+                onClick={() => switchMode("signup")}
+                className={`cursor-pointer rounded-full px-3 py-2 text-sm font-extrabold transition-transform hover:scale-105 ${
+                  mode === "signup" ? "bg-card text-primary shadow-sm" : "text-muted-foreground"
+                }`}
+              >
+                Регистрация
               </button>
             </div>
 
@@ -217,7 +225,7 @@ function AuthPage() {
                 </p>
               )}
               {message && (
-                <p className="flex items-start gap-2 rounded-xl bg-secondary px-3 py-2 text-sm text-secondary-foreground">
+                <p className="flex items-start gap-2 rounded-xl border border-green-200 bg-green-100 px-3 py-2 text-sm text-green-800">
                   <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0" /> {message}
                 </p>
               )}
