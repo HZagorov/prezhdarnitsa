@@ -1,7 +1,7 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { useState } from "react";
 import { ShoppingBasket, Check, Minus, Plus, Truck, RotateCcw } from "lucide-react";
-import { CATEGORIES, formatPrice, getProductById } from "@/lib/products";
+import { CATEGORIES, formatPrice, getProductById, getProductFamilyKey, getProductFamilyName, getProductVariantLabel } from "@/lib/products";
 import { useProducts } from "@/lib/products-context";
 import { useCart } from "@/lib/cart";
 import { ProductCard } from "@/components/ProductCard";
@@ -38,6 +38,17 @@ function ProductPage() {
 
   const category = CATEGORIES.find((c) => c.id === product.category);
   const similar = products.filter((p) => p.category === product.category && p.id !== product.id).slice(0, 4);
+  const familyKey = getProductFamilyKey(product);
+  const variants = familyKey
+    ? products
+        .filter((p) => getProductFamilyKey(p) === familyKey)
+        .sort((a, b) =>
+          getProductVariantLabel(a).localeCompare(getProductVariantLabel(b), undefined, {
+            numeric: true,
+          }),
+        )
+    : [];
+  const navigate = Route.useNavigate();
 
   const handleAdd = () => {
     add(product.id, qty);
@@ -93,7 +104,7 @@ function ProductPage() {
               {product.badge}
             </span>
           )}
-          <h1 className="mt-2 font-display text-3xl font-extrabold text-foreground md:text-4xl">{product.name}</h1>
+          <h1 className="mt-2 font-display text-3xl font-extrabold text-foreground md:text-4xl">{getProductFamilyName(product)}</h1>
           <div className="mt-4 flex items-baseline gap-3">
             <span className="text-3xl font-extrabold text-primary">{formatPrice(product.price)}</span>
             {product.oldPrice && (
@@ -101,6 +112,36 @@ function ProductPage() {
             )}
           </div>
           {product.description && <p className="mt-4 leading-relaxed text-muted-foreground">{product.description}</p>}
+
+          {variants.length > 1 && (
+            <div className="mt-6">
+              <div className="flex items-baseline justify-between gap-3">
+                <span className="text-sm font-extrabold text-foreground">Цвят:</span>
+                <span className="text-sm text-muted-foreground">{getProductVariantLabel(product)}</span>
+              </div>
+              <div className="mt-3 grid grid-cols-5 gap-2 sm:grid-cols-7">
+                {variants.map((variant) => {
+                  const selected = variant.id === product.id;
+                  return (
+                    <button
+                      key={variant.id}
+                      type="button"
+                      onClick={() => navigate({ to: "/produkt/$id", params: { id: variant.id } })}
+                      title={`Genesis ${getProductVariantLabel(variant)}`}
+                      aria-label={`Избери цвят ${getProductVariantLabel(variant)}`}
+                      aria-pressed={selected}
+                      className={`overflow-hidden rounded-xl border-2 bg-card p-0.5 transition-all ${
+                        selected ? "border-primary ring-2 ring-primary/20" : "border-border hover:border-primary/60"
+                      }`}
+                    >
+                      <img src={variant.image} alt="" className="aspect-square w-full object-cover" />
+                    </button>
+                  );
+                })}
+              </div>
+              <p className="mt-2 text-xs text-muted-foreground">Изберете цвят, за да го добавите в количката.</p>
+            </div>
+          )}
 
           <ul className="mt-5 space-y-2">
             {product.details.map((d) => (

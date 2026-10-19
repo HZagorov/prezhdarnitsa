@@ -28,9 +28,26 @@ export interface Product {
   description?: string;
   details: string[];
   badge?: "Ново" | "Хит" | "Промоция";
+  familyKey?: string;
+  familyName?: string;
+  variantLabel?: string;
+}
+
+export function getProductFamilyKey(product: Pick<Product, "familyKey">): string | undefined {
+  return product.familyKey;
+}
+
+export function getProductFamilyName(product: Pick<Product, "familyName" | "name">): string {
+  return product.familyName ?? product.name;
+}
+
+export function getProductVariantLabel(product: Pick<Product, "variantLabel" | "name">): string {
+  return product.variantLabel ?? product.name;
 }
 
 type ProductRow = Database["public"]["Tables"]["products"]["Row"];
+type ProductVariantRow = Database["public"]["Tables"]["product_variants"]["Row"];
+type ProductWithVariantsRow = ProductRow & { product_variants: ProductVariantRow[] };
 
 const IMAGE_URLS: Record<string, string> = {
   pamuchnaRozova: "/products/pamuchna-rozova.jpg",
@@ -78,48 +95,66 @@ function resolveImage(imageKey: string): string {
   return IMAGE_URLS[imageKey] ?? imageKey;
 }
 
-function toProduct(row: ProductRow): Product {
+function toProduct(row: ProductRow, variant?: ProductVariantRow): Product {
   return {
-    id: row.id,
-    name: row.name,
+    id: variant?.id ?? row.id,
+    name: variant?.name ?? row.name,
     category: row.category as Category,
     ...(row.subcategory ? { sub: row.subcategory } : {}),
     price: row.price,
     ...(row.old_price !== null ? { oldPrice: row.old_price } : {}),
-    image: resolveImage(row.image_key),
+    image: resolveImage(variant?.image_key ?? row.image_key),
     ...(row.gallery_keys.length > 0
       ? { gallery: row.gallery_keys.map(resolveImage) }
       : {}),
     ...(row.description ? { description: row.description } : {}),
     details: row.details,
     ...(row.badge ? { badge: row.badge as Product["badge"] } : {}),
+    ...(variant
+      ? { familyKey: row.id, familyName: row.name, variantLabel: variant.name }
+      : {}),
   };
 }
 
+function toProducts(row: ProductWithVariantsRow): Product[] {
+  const variants = row.product_variants.filter((variant) => variant.is_active);
+  return variants.length > 0 ? variants.map((variant) => toProduct(row, variant)) : [toProduct(row)];
+}
+
 export const getProducts = createServerFn({ method: "GET" }).handler(async () => {
-  const { data, error } = await supabase
-    .from("products")
-    .select("*")
-    .eq("is_active", true)
-    .order("sort_order")
-    .order("name");
+  const [{ data, error }, { data: variants, error: variantsError }] = await Promise.all([
+    supabase
+      .from("products")
+      .select("*")
+      .eq("is_active", true)
+      .order("sort_order")
+      .order("name"),
+    supabase
+      .from("product_variants")
+      .select("id, product_id, name, image_key, is_active")
+      .eq("is_active", true),
+  ]);
 
   if (error) throw new Error(`Could not load products: ${error.message}`);
-  return data.map(toProduct);
+  if (variantsError) throw new Error(`Could not load product variants: ${variantsError.message}`);
+
+  const variantsByProduct = new Map<string, ProductVariantRow[]>();
+  for (const variant of variants ?? []) {
+    const productVariants = variantsByProduct.get(variant.product_id) ?? [];
+    productVariants.push(variant);
+    variantsByProduct.set(variant.product_id, productVariants);
+  }
+
+  return data.flatMap((row) =>
+    toProducts({ ...row, product_variants: variantsByProduct.get(row.id) ?? [] }),
+  );
 });
 
 export const getProductById = createServerFn({ method: "GET" })
   .validator((id: string) => id)
   .handler(async ({ data: id }) => {
-    const { data, error } = await supabase
-      .from("products")
-      .select("*")
-      .eq("id", id)
-      .eq("is_active", true)
-      .maybeSingle();
-
-    if (error) throw new Error(`Could not load product: ${error.message}`);
-    return data ? toProduct(data) : undefined;
+    const products = await getProducts();
+    return products.find((product) => product.id === id);
   });
 
 export function formatPrice(priceEur: number): string {

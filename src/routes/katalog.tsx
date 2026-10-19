@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
-import { CATEGORIES, formatPrice, YARN_SUBCATEGORIES, type Category } from "@/lib/products";
+import { CATEGORIES, formatPrice, getProductFamilyKey, YARN_SUBCATEGORIES, type Category } from "@/lib/products";
 import { useProducts } from "@/lib/products-context";
 import { ProductCard } from "@/components/ProductCard";
 
@@ -47,6 +47,17 @@ function CatalogPage() {
         return list;
     }
   }, [products, kategoriq, sort, maxPrice, sub]);
+
+  const grouped = useMemo(() => {
+    const families = new Map<string, { product: (typeof filtered)[number]; count: number }>();
+    for (const product of filtered) {
+      const key = getProductFamilyKey(product) ?? product.id;
+      const existing = families.get(key);
+      if (existing) existing.count += 1;
+      else families.set(key, { product, count: 1 });
+    }
+    return [...families.values()];
+  }, [filtered]);
 
   return (
     <div className="mx-auto max-w-6xl px-4 py-10">
@@ -120,14 +131,14 @@ function CatalogPage() {
             <option value="name">По име</option>
           </select>
         </label>
-        <span className="text-sm text-muted-foreground">{filtered.length} продукта</span>
+        <span className="text-sm text-muted-foreground">{grouped.length} продукта</span>
       </div>
 
       {/* Продукти */}
-      {filtered.length > 0 ? (
+      {grouped.length > 0 ? (
         <div className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
-          {filtered.map((p) => (
-            <ProductCard key={p.id} product={p} />
+          {grouped.map(({ product: p, count }) => (
+            <ProductCard key={getProductFamilyKey(p) ?? p.id} product={p} variantCount={count} />
           ))}
         </div>
       ) : (

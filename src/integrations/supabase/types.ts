@@ -66,7 +66,47 @@ export type Database = {
           created_at?: string
           updated_at?: string
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "product_variants_product_id_fkey"
+            columns: ["id"]
+            isOneToOne: false
+            referencedRelation: "product_variants"
+            referencedColumns: ["product_id"]
+          }
+        ]
+      }
+      product_variants: {
+        Row: {
+          id: string
+          product_id: string
+          name: string
+          image_key: string
+          is_active: boolean
+        }
+        Insert: {
+          id: string
+          product_id: string
+          name: string
+          image_key: string
+          is_active?: boolean
+        }
+        Update: {
+          id?: string
+          product_id?: string
+          name?: string
+          image_key?: string
+          is_active?: boolean
+        }
+        Relationships: [
+          {
+            foreignKeyName: "product_variants_product_id_fkey"
+            columns: ["product_id"]
+            isOneToOne: false
+            referencedRelation: "products"
+            referencedColumns: ["id"]
+          }
+        ]
       }
     }
     Views: {

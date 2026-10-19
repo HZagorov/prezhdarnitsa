@@ -1,6 +1,6 @@
 import { Link } from "@tanstack/react-router";
 import { ShoppingBasket } from "lucide-react";
-import { formatPrice, type Product } from "@/lib/products";
+import { formatPrice, getProductFamilyName, type Product } from "@/lib/products";
 import { useCart } from "@/lib/cart";
 
 const BADGE_STYLES: Record<string, string> = {
@@ -9,7 +9,7 @@ const BADGE_STYLES: Record<string, string> = {
   "Промоция": "bg-sunshine text-sunshine-foreground",
 };
 
-export function ProductCard({ product }: { product: Product }) {
+export function ProductCard({ product, variantCount }: { product: Product; variantCount?: number }) {
   const { add } = useCart();
   return (
     <div className="group flex flex-col overflow-hidden rounded-3xl border border-border bg-card shadow-sm transition-all hover:-translate-y-1 hover:shadow-lg">
@@ -40,8 +40,11 @@ export function ProductCard({ product }: { product: Product }) {
           params={{ id: product.id }}
           className="font-display text-lg leading-snug font-bold text-foreground hover:text-primary"
         >
-          {product.name}
+          {getProductFamilyName(product)}
         </Link>
+        {variantCount && variantCount > 1 && (
+          <span className="text-xs font-semibold text-muted-foreground">{variantCount} цвята</span>
+        )}
         <div className="mt-auto flex items-center justify-between gap-2">
           <div>
             <span className="text-lg font-extrabold text-primary">{formatPrice(product.price)}</span>
