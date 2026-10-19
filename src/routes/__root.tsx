@@ -16,6 +16,7 @@ import { reportLovableError } from "../lib/lovable-error-reporting";
 import { CartProvider, useCart } from "../lib/cart";
 import { getProducts } from "../lib/products";
 import { ProductsProvider } from "../lib/products-context";
+import { supabase } from "../integrations/supabase/client";
 //import logoAsset from "../assets/logo.png.asset.json";
 //import violetaAsset from "../assets/violeta.png.asset.json";
 import logoAsset from "../assets/logo.png";
@@ -158,6 +159,25 @@ function CartButton() {
 
 function Header() {
   const [open, setOpen] = useState(false);
+  const [signedInEmail, setSignedInEmail] = useState<string | null>(null);
+
+  useEffect(() => {
+    let mounted = true;
+
+    void supabase.auth.getSession().then(({ data }) => {
+      if (mounted) setSignedInEmail(data.session?.user.email ?? null);
+    });
+
+    const { data } = supabase.auth.onAuthStateChange((_event, session) => {
+      if (mounted) setSignedInEmail(session?.user.email ?? null);
+    });
+
+    return () => {
+      mounted = false;
+      data.subscription.unsubscribe();
+    };
+  }, []);
+
   return (
     <header className="sticky top-0 z-50 border-b border-border bg-background/90 backdrop-blur">
       <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-4 pb-4 pt-2 sm:pb-4 sm:pt-3">
@@ -206,10 +226,11 @@ function Header() {
           <Link
             to="/vhod"
             className="inline-flex items-center gap-2 rounded-full border border-primary px-3 py-2 text-sm font-bold text-primary transition-colors hover:bg-primary hover:text-primary-foreground"
-            aria-label="Вход или регистрация"
+            aria-label={signedInEmail ? "Профил" : "Вход или регистрация"}
+            title={signedInEmail ? signedInEmail : "Вход или регистрация"}
           >
             <UserRound className="h-5 w-5" />
-            <span className="hidden sm:inline">Вход</span>
+            {!signedInEmail && <span className="hidden sm:inline">Вход</span>}
           </Link>
           <CartButton />
           <button
