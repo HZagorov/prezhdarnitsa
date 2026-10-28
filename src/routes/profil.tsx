@@ -1,6 +1,6 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
-import { CheckCircle2, MapPin, UserRound } from "lucide-react";
+import { CheckCircle2, LogOut, MapPin, UserRound } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -40,6 +40,7 @@ export const Route = createFileRoute("/profil")({
 });
 
 function ProfilePage() {
+  const navigate = useNavigate();
   const [userId, setUserId] = useState<string | null>(null);
   const [email, setEmail] = useState<string | null>(null);
   const [firstName, setFirstName] = useState("");
@@ -185,6 +186,17 @@ function ProfilePage() {
     setAddressMessage("Адресът е добавен успешно.");
   };
 
+  const handleSignOut = async () => {
+    const { error: signOutError } = await supabase.auth.signOut();
+
+    if (signOutError) {
+      setError(signOutError.message);
+      return;
+    }
+
+    await navigate({ to: "/" });
+  };
+
   if (loading) {
     return (
       <div className="mx-auto max-w-2xl px-4 py-20 text-center text-muted-foreground">
@@ -253,6 +265,15 @@ function ProfilePage() {
             Адреси
           </button>
         </div>
+
+        <Button
+          type="button"
+          variant="outline"
+          className="mt-4 w-full rounded-full"
+          onClick={handleSignOut}
+        >
+          <LogOut /> Изход
+        </Button>
 
         {activeSection === "profile" && (
           <form className="mt-8 space-y-5" onSubmit={handleSubmit}>

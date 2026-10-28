@@ -9,7 +9,7 @@ import {
 } from "@tanstack/react-router";
 import type { ErrorComponentProps } from "@tanstack/react-router";
 import { useEffect, useState, type ReactNode } from "react";
-import { ShoppingBasket, Menu, X, Heart, UserRound } from "lucide-react";
+import { ShoppingBasket, Menu, X, Heart, UserRound, LogOut } from "lucide-react";
 
 import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
@@ -17,6 +17,14 @@ import { CartProvider, useCart } from "../lib/cart";
 import { getProducts } from "../lib/products";
 import { ProductsProvider } from "../lib/products-context";
 import { supabase } from "../integrations/supabase/client";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "../components/ui/dropdown-menu";
 //import logoAsset from "../assets/logo.png.asset.json";
 //import violetaAsset from "../assets/violeta.png.asset.json";
 import logoAsset from "../assets/logo.png";
@@ -178,6 +186,11 @@ function Header() {
     };
   }, []);
 
+  const handleSignOut = async () => {
+    await supabase.auth.signOut();
+    setSignedInEmail(null);
+  };
+
   return (
     <header className="sticky top-0 z-50 border-b border-border bg-background/90 backdrop-blur">
       <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-4 pb-4 pt-2 sm:pb-4 sm:pt-3">
@@ -223,15 +236,41 @@ function Header() {
           ))}
         </nav>
         <div className="flex items-center gap-2">
-          <Link
-            to={signedInEmail ? "/profil" : "/vhod"}
-            className="inline-flex items-center gap-2 rounded-full border border-primary px-3 py-2 text-sm font-bold text-primary transition-colors hover:bg-primary hover:text-primary-foreground"
-            aria-label={signedInEmail ? "Профил" : "Вход или регистрация"}
-            title={signedInEmail ? signedInEmail : "Вход или регистрация"}
-          >
-            <UserRound className="h-5 w-5" />
-            {!signedInEmail && <span className="hidden sm:inline">Вход</span>}
-          </Link>
+          {signedInEmail ? (
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <button
+                  className="inline-flex cursor-pointer items-center gap-2 rounded-full border border-primary px-3 py-2 text-sm font-bold text-primary transition-colors hover:bg-primary hover:text-primary-foreground"
+                  aria-label="Профил"
+                  title={signedInEmail}
+                >
+                  <UserRound className="h-5 w-5" />
+                </button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" className="w-52">
+                <DropdownMenuLabel className="truncate">{signedInEmail}</DropdownMenuLabel>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem asChild>
+                  <Link to="/profil">
+                    <UserRound /> Моят профил
+                  </Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={handleSignOut}>
+                  <LogOut /> Изход
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          ) : (
+            <Link
+              to="/vhod"
+              className="inline-flex items-center gap-2 rounded-full border border-primary px-3 py-2 text-sm font-bold text-primary transition-colors hover:bg-primary hover:text-primary-foreground"
+              aria-label="Вход или регистрация"
+              title="Вход или регистрация"
+            >
+              <UserRound className="h-5 w-5" />
+              <span className="hidden sm:inline">Вход</span>
+            </Link>
+          )}
           <CartButton />
           <button
             className="rounded-full p-2 hover:bg-muted md:hidden"

@@ -1,4 +1,4 @@
-import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { CheckCircle2, LogOut, Mail, UserRound } from "lucide-react";
 
@@ -20,7 +20,6 @@ export const Route = createFileRoute("/vhod")({
 type AuthMode = "login" | "signup";
 
 function AuthPage() {
-  const navigate = useNavigate();
   const [mode, setMode] = useState<AuthMode>("login");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -92,10 +91,6 @@ function AuthPage() {
       setPassword("");
       setConfirmPassword("");
       return;
-    }
-
-    if (mode === "login") {
-      await navigate({ to: "/" });
     }
   };
 
