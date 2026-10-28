@@ -14,6 +14,7 @@ import { Route as KatalogRouteImport } from './routes/katalog'
 import { Route as KolichkaRouteImport } from './routes/kolichka'
 import { Route as KontaktiRouteImport } from './routes/kontakti'
 import { Route as PorachkaRouteImport } from './routes/porachka'
+import { Route as ProfilRouteImport } from './routes/profil'
 import { Route as VhodRouteImport } from './routes/vhod'
 import { Route as ZaNasRouteImport } from './routes/za-nas'
 import { Route as ProduktIdRouteImport } from './routes/produkt.$id'
@@ -43,6 +44,11 @@ const PorachkaRoute = PorachkaRouteImport.update({
   path: '/porachka',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ProfilRoute = ProfilRouteImport.update({
+  id: '/profil',
+  path: '/profil',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const VhodRoute = VhodRouteImport.update({
   id: '/vhod',
   path: '/vhod',
@@ -65,6 +71,7 @@ export interface FileRoutesByFullPath {
   '/kolichka': typeof KolichkaRoute
   '/kontakti': typeof KontaktiRoute
   '/porachka': typeof PorachkaRoute
+  '/profil': typeof ProfilRoute
   '/vhod': typeof VhodRoute
   '/za-nas': typeof ZaNasRoute
   '/produkt/$id': typeof ProduktIdRoute
@@ -75,6 +82,7 @@ export interface FileRoutesByTo {
   '/kolichka': typeof KolichkaRoute
   '/kontakti': typeof KontaktiRoute
   '/porachka': typeof PorachkaRoute
+  '/profil': typeof ProfilRoute
   '/vhod': typeof VhodRoute
   '/za-nas': typeof ZaNasRoute
   '/produkt/$id': typeof ProduktIdRoute
@@ -86,6 +94,7 @@ export interface FileRoutesById {
   '/kolichka': typeof KolichkaRoute
   '/kontakti': typeof KontaktiRoute
   '/porachka': typeof PorachkaRoute
+  '/profil': typeof ProfilRoute
   '/vhod': typeof VhodRoute
   '/za-nas': typeof ZaNasRoute
   '/produkt/$id': typeof ProduktIdRoute
@@ -98,6 +107,7 @@ export interface FileRouteTypes {
     | '/kolichka'
     | '/kontakti'
     | '/porachka'
+    | '/profil'
     | '/vhod'
     | '/za-nas'
     | '/produkt/$id'
@@ -108,6 +118,7 @@ export interface FileRouteTypes {
     | '/kolichka'
     | '/kontakti'
     | '/porachka'
+    | '/profil'
     | '/vhod'
     | '/za-nas'
     | '/produkt/$id'
@@ -118,6 +129,7 @@ export interface FileRouteTypes {
     | '/kolichka'
     | '/kontakti'
     | '/porachka'
+    | '/profil'
     | '/vhod'
     | '/za-nas'
     | '/produkt/$id'
@@ -129,6 +141,7 @@ export interface RootRouteChildren {
   KolichkaRoute: typeof KolichkaRoute
   KontaktiRoute: typeof KontaktiRoute
   PorachkaRoute: typeof PorachkaRoute
+  ProfilRoute: typeof ProfilRoute
   VhodRoute: typeof VhodRoute
   ZaNasRoute: typeof ZaNasRoute
   ProduktIdRoute: typeof ProduktIdRoute
@@ -171,6 +184,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PorachkaRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/profil': {
+      id: '/profil'
+      path: '/profil'
+      fullPath: '/profil'
+      preLoaderRoute: typeof ProfilRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/vhod': {
       id: '/vhod'
       path: '/vhod'
@@ -201,6 +221,7 @@ const rootRouteChildren: RootRouteChildren = {
   KolichkaRoute: KolichkaRoute,
   KontaktiRoute: KontaktiRoute,
   PorachkaRoute: PorachkaRoute,
+  ProfilRoute: ProfilRoute,
   VhodRoute: VhodRoute,
   ZaNasRoute: ZaNasRoute,
   ProduktIdRoute: ProduktIdRoute,

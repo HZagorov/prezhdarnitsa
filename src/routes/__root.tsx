@@ -224,7 +224,7 @@ function Header() {
         </nav>
         <div className="flex items-center gap-2">
           <Link
-            to="/vhod"
+            to={signedInEmail ? "/profil" : "/vhod"}
             className="inline-flex items-center gap-2 rounded-full border border-primary px-3 py-2 text-sm font-bold text-primary transition-colors hover:bg-primary hover:text-primary-foreground"
             aria-label={signedInEmail ? "Профил" : "Вход или регистрация"}
             title={signedInEmail ? signedInEmail : "Вход или регистрация"}
