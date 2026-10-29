@@ -5,11 +5,18 @@ import { CheckCircle2, LogOut, MapPin, UserRound } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { formatPrice } from "@/lib/products";
 import { supabase } from "@/integrations/supabase/client";
 import type { Tables } from "@/integrations/supabase/types";
 
 type SavedAddress = Tables<"addresses">;
-type ProfileSection = "profile" | "addresses";
+type Order = Tables<"orders">;
+type OrderItem = Tables<"order_item">;
+type ProfileSection = "profile" | "addresses" | "orders";
+
+type OrderWithItems = Order & {
+  items: OrderItem[];
+};
 
 type AddressForm = {
   recipientName: string;
@@ -27,6 +34,20 @@ const emptyAddress: AddressForm = {
   postalCode: "",
   addressLine: "",
   notes: "",
+};
+
+const orderStatusLabels: Record<string, string> = {
+  pending: "Очаква потвърждение",
+  confirmed: "Потвърдена",
+  processing: "Обработва се",
+  shipped: "Изпратена",
+  delivered: "Доставена",
+  cancelled: "Отказана",
+};
+
+const paymentMethodLabels: Record<string, string> = {
+  cod: "Наложен платеж",
+  card: "Плащане с карта",
 };
 
 export const Route = createFileRoute("/profil")({
@@ -47,6 +68,7 @@ function ProfilePage() {
   const [lastName, setLastName] = useState("");
   const [phone, setPhone] = useState("");
   const [addresses, setAddresses] = useState<SavedAddress[]>([]);
+  const [orders, setOrders] = useState<OrderWithItems[]>([]);
   const [addressForm, setAddressForm] = useState<AddressForm>(emptyAddress);
   const [activeSection, setActiveSection] = useState<ProfileSection>("profile");
   const [loading, setLoading] = useState(true);
@@ -103,6 +125,39 @@ function ProfilePage() {
         setError(addressesError.message);
       } else {
         setAddresses(savedAddresses ?? []);
+      }
+
+      const { data: savedOrders, error: ordersError } = await supabase
+        .from("orders")
+        .select("*")
+        .eq("user_id", session.user.id)
+        .order("created_at", { ascending: false });
+
+      if (!mounted) return;
+
+      if (ordersError) {
+        setError(ordersError.message);
+      } else if (savedOrders?.length) {
+        const { data: savedOrderItems, error: orderItemsError } = await supabase
+          .from("order_item")
+          .select("*")
+          .in(
+            "order_id",
+            savedOrders.map((order) => order.id),
+          );
+
+        if (!mounted) return;
+
+        if (orderItemsError) {
+          setError(orderItemsError.message);
+        } else {
+          setOrders(
+            savedOrders.map((order) => ({
+              ...order,
+              items: (savedOrderItems ?? []).filter((item) => item.order_id === order.id),
+            })),
+          );
+        }
       }
 
       setLoading(false);
@@ -275,7 +330,7 @@ function ProfilePage() {
         </div>
 
         <div
-          className="mt-8 grid grid-cols-2 rounded-full bg-muted p-1"
+          className="mt-8 grid grid-cols-3 rounded-full bg-muted p-1"
           role="tablist"
           aria-label="Раздели на профила"
         >
@@ -304,6 +359,19 @@ function ProfilePage() {
             }`}
           >
             Адреси
+          </button>
+          <button
+            type="button"
+            role="tab"
+            aria-selected={activeSection === "orders"}
+            onClick={() => setActiveSection("orders")}
+            className={`cursor-pointer rounded-full px-3 py-2 text-sm font-extrabold transition-transform hover:scale-105 ${
+              activeSection === "orders"
+                ? "bg-card text-primary shadow-sm"
+                : "text-muted-foreground"
+            }`}
+          >
+            Поръчки
           </button>
         </div>
 
@@ -385,6 +453,71 @@ function ProfilePage() {
               {saving ? "Запазване…" : "Запази промените"}
             </Button>
           </form>
+        )}
+
+        {activeSection === "orders" && (
+          <div className="mt-10">
+            <div>
+              <h2 className="font-display text-2xl font-extrabold">История на поръчките</h2>
+              <p className="mt-1 text-sm text-muted-foreground">
+                Прегледайте направените от вас поръчки.
+              </p>
+            </div>
+
+            {orders.length === 0 ? (
+              <p className="mt-6 rounded-2xl border border-border bg-background p-5 text-sm text-muted-foreground">
+                Все още нямате направени поръчки.
+              </p>
+            ) : (
+              <div className="mt-6 space-y-4">
+                {orders.map((order) => (
+                  <article
+                    key={order.id}
+                    className="rounded-2xl border border-border bg-background p-5"
+                  >
+                    <div className="flex flex-wrap items-start justify-between gap-3">
+                      <div>
+                        <p className="font-extrabold">
+                          Поръчка от {new Date(order.created_at).toLocaleDateString("bg-BG")}
+                        </p>
+                        <p className="mt-1 text-xs text-muted-foreground">№ {order.id}</p>
+                      </div>
+                      <span className="rounded-full bg-muted px-3 py-1 text-xs font-extrabold text-primary">
+                        {orderStatusLabels[order.status] ?? order.status}
+                      </span>
+                    </div>
+
+                    <div className="mt-4 space-y-2 border-t border-border pt-4 text-sm">
+                      {order.items.map((item) => (
+                        <div key={item.id} className="flex justify-between gap-3">
+                          <span className="text-muted-foreground">
+                            {item.product_name} × {item.quantity}
+                          </span>
+                          <span className="font-bold whitespace-nowrap">
+                            {formatPrice(item.unit_price * item.quantity)}
+                          </span>
+                        </div>
+                      ))}
+                    </div>
+
+                    <div className="mt-4 border-t border-border pt-4 text-sm">
+                      <p className="text-muted-foreground">
+                        Доставка: {order.shipping_address}, {order.shipping_postal_code}{" "}
+                        {order.shipping_city}
+                      </p>
+                      <p className="mt-1 text-muted-foreground">
+                        {paymentMethodLabels[order.payment_method] ?? order.payment_method}
+                      </p>
+                      <p className="mt-3 flex justify-between gap-3 font-extrabold">
+                        <span>Общо</span>
+                        <span className="text-primary">{formatPrice(order.total)}</span>
+                      </p>
+                    </div>
+                  </article>
+                ))}
+              </div>
+            )}
+          </div>
         )}
 
         {activeSection === "addresses" && (
