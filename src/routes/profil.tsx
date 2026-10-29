@@ -265,6 +265,20 @@ function ProfilePage() {
     setAddressMessage("Адресът е добавен успешно.");
   };
 
+  const getMissingAddressFieldsMessage = () => {
+    const missingFields = [
+      !addressForm.recipientName.trim() && "получател",
+      !addressForm.phone.trim() && "телефон",
+      !addressForm.city.trim() && "град",
+      !addressForm.postalCode.trim() && "пощенски код",
+      !addressForm.addressLine.trim() && "адрес",
+    ].filter((field): field is string => Boolean(field));
+
+    return missingFields.length > 0
+      ? `Моля, попълнете следните полета: ${missingFields.join(", ")}.`
+      : "";
+  };
+
   const handleSetDefaultAddress = async (addressId: string) => {
     const selectedAddress = addresses.find((address) => address.id === addressId);
     if (selectedAddress?.is_default) return;
@@ -581,56 +595,87 @@ function ProfilePage() {
               </div>
             </div>
 
-            <form className="mt-6 space-y-4" onSubmit={handleAddressSubmit}>
+            <form
+              className="mt-6 space-y-4"
+              onSubmit={handleAddressSubmit}
+              onInvalid={() => setError(getMissingAddressFieldsMessage())}
+            >
               <div className="grid gap-4 sm:grid-cols-2">
                 <div className="space-y-2">
-                  <Label htmlFor="recipient-name">Получател</Label>
+                  <Label htmlFor="recipient-name">
+                    Получател <span className="text-destructive">*</span>
+                  </Label>
                   <Input
                     id="recipient-name"
                     value={addressForm.recipientName}
-                    onChange={(event) =>
+                    onChange={(event) => {
+                      event.currentTarget.setCustomValidity("");
                       setAddressForm((current) => ({
                         ...current,
                         recipientName: event.target.value,
-                      }))
+                      }));
+                    }}
+                    onInvalid={(event) =>
+                      event.currentTarget.setCustomValidity(requiredFieldMessage)
                     }
                     className="h-11 rounded-xl"
                     required
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="address-phone">Телефон</Label>
+                  <Label htmlFor="address-phone">
+                    Телефон <span className="text-destructive">*</span>
+                  </Label>
                   <Input
                     id="address-phone"
                     type="tel"
                     value={addressForm.phone}
-                    onChange={(event) =>
-                      setAddressForm((current) => ({ ...current, phone: event.target.value }))
+                    onChange={(event) => {
+                      event.currentTarget.setCustomValidity("");
+                      setAddressForm((current) => ({ ...current, phone: event.target.value }));
+                    }}
+                    onInvalid={(event) =>
+                      event.currentTarget.setCustomValidity(requiredFieldMessage)
                     }
                     className="h-11 rounded-xl"
                     required
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="city">Град</Label>
+                  <Label htmlFor="city">
+                    Град <span className="text-destructive">*</span>
+                  </Label>
                   <Input
                     id="city"
                     value={addressForm.city}
-                    onChange={(event) =>
-                      setAddressForm((current) => ({ ...current, city: event.target.value }))
+                    onChange={(event) => {
+                      event.currentTarget.setCustomValidity("");
+                      setAddressForm((current) => ({ ...current, city: event.target.value }));
+                    }}
+                    onInvalid={(event) =>
+                      event.currentTarget.setCustomValidity(requiredFieldMessage)
                     }
                     className="h-11 rounded-xl"
                     required
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="postal-code">Пощенски код</Label>
+                  <Label htmlFor="postal-code">
+                    Пощенски код <span className="text-destructive">*</span>
+                  </Label>
                   <Input
                     id="postal-code"
                     inputMode="numeric"
                     value={addressForm.postalCode}
-                    onChange={(event) =>
-                      setAddressForm((current) => ({ ...current, postalCode: event.target.value }))
+                    onChange={(event) => {
+                      event.currentTarget.setCustomValidity("");
+                      setAddressForm((current) => ({
+                        ...current,
+                        postalCode: event.target.value,
+                      }));
+                    }}
+                    onInvalid={(event) =>
+                      event.currentTarget.setCustomValidity(requiredFieldMessage)
                     }
                     className="h-11 rounded-xl"
                     required
@@ -638,13 +683,20 @@ function ProfilePage() {
                 </div>
               </div>
               <div className="space-y-2">
-                <Label htmlFor="address-line">Адрес</Label>
+                <Label htmlFor="address-line">
+                  Адрес <span className="text-destructive">*</span>
+                </Label>
                 <Input
                   id="address-line"
                   value={addressForm.addressLine}
-                  onChange={(event) =>
-                    setAddressForm((current) => ({ ...current, addressLine: event.target.value }))
-                  }
+                  onChange={(event) => {
+                    event.currentTarget.setCustomValidity("");
+                    setAddressForm((current) => ({
+                      ...current,
+                      addressLine: event.target.value,
+                    }));
+                  }}
+                  onInvalid={(event) => event.currentTarget.setCustomValidity(requiredFieldMessage)}
                   className="h-11 rounded-xl"
                   required
                 />
@@ -668,6 +720,11 @@ function ProfilePage() {
               >
                 {savingAddress ? "Добавяне…" : "Добави адрес"}
               </Button>
+              {error && (
+                <p className="rounded-xl bg-destructive/10 px-3 py-2 text-sm text-destructive">
+                  {error}
+                </p>
+              )}
               {addressMessage && (
                 <p className="flex items-start gap-2 rounded-xl border border-green-200 bg-green-100 px-3 py-2 text-sm text-green-800">
                   <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0" /> {addressMessage}
