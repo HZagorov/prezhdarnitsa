@@ -94,6 +94,7 @@ function ProfilePage() {
         .from("addresses")
         .select("*")
         .eq("user_id", session.user.id)
+        .order("is_default", { ascending: false })
         .order("created_at", { ascending: false });
 
       if (!mounted) return;
@@ -171,6 +172,7 @@ function ProfilePage() {
         postal_code: addressForm.postalCode.trim(),
         address_line: addressForm.addressLine.trim(),
         notes: addressForm.notes.trim() || null,
+        is_default: addresses.length === 0,
       })
       .select()
       .single();
@@ -184,6 +186,45 @@ function ProfilePage() {
     setAddresses((current) => [data, ...current]);
     setAddressForm(emptyAddress);
     setAddressMessage("Адресът е добавен успешно.");
+  };
+
+  const handleSetDefaultAddress = async (addressId: string) => {
+    const selectedAddress = addresses.find((address) => address.id === addressId);
+    if (selectedAddress?.is_default) return;
+
+    setAddressMessage("");
+    setError("");
+
+    if (!userId) {
+      setError("Моля, влезте в профила си, за да промените адреса по подразбиране.");
+      return;
+    }
+
+    const { error: clearError } = await supabase
+      .from("addresses")
+      .update({ is_default: false })
+      .eq("user_id", userId);
+
+    if (clearError) {
+      setError(clearError.message);
+      return;
+    }
+
+    const { error: setDefaultError } = await supabase
+      .from("addresses")
+      .update({ is_default: true })
+      .eq("id", addressId)
+      .eq("user_id", userId);
+
+    if (setDefaultError) {
+      setError(setDefaultError.message);
+      return;
+    }
+
+    setAddresses((current) =>
+      current.map((address) => ({ ...address, is_default: address.id === addressId })),
+    );
+    setAddressMessage("Адресът по подразбиране е променен.");
   };
 
   const handleSignOut = async () => {
@@ -451,20 +492,38 @@ function ProfilePage() {
             </form>
 
             {addresses.length > 0 && (
-              <div className="mt-8 space-y-3">
+              <div className="mt-8 space-y-3 border-t border-border pt-8">
                 <h3 className="font-display text-xl font-extrabold">Запазени адреси</h3>
                 {addresses.map((address) => (
-                  <div
+                  <button
+                    type="button"
                     key={address.id}
-                    className="rounded-2xl border border-border bg-background p-4 text-sm"
+                    onClick={() => void handleSetDefaultAddress(address.id)}
+                    aria-pressed={address.is_default}
+                    className={`w-full cursor-pointer rounded-2xl border-2 p-4 text-left text-sm transition-colors ${
+                      address.is_default
+                        ? "border-primary bg-muted"
+                        : "border-border bg-background hover:border-primary"
+                    }`}
                   >
-                    <p className="font-extrabold">{address.recipient_name}</p>
+                    <div className="flex items-start justify-between gap-3">
+                      <p className="font-extrabold">{address.recipient_name}</p>
+                      <span
+                        className={`shrink-0 rounded-full px-3 py-1 text-xs font-extrabold ${
+                          address.is_default
+                            ? "bg-primary text-primary-foreground"
+                            : "border border-primary text-primary"
+                        }`}
+                      >
+                        {address.is_default ? "Основен" : "Избери"}
+                      </span>
+                    </div>
                     <p className="mt-1 text-muted-foreground">
                       {address.address_line}, {address.postal_code} {address.city}
                     </p>
                     <p className="mt-1 text-muted-foreground">{address.phone}</p>
                     {address.notes && <p className="mt-1 text-muted-foreground">{address.notes}</p>}
-                  </div>
+                  </button>
                 ))}
               </div>
             )}

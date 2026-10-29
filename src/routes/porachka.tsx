@@ -5,6 +5,7 @@ import { formatPrice } from "@/lib/products";
 import { useCart } from "@/lib/cart";
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
+import type { Tables } from "@/integrations/supabase/types";
 
 const FREE_SHIPPING_FROM = 80;
 const SHIPPING_COST = 6.9;
@@ -18,6 +19,8 @@ type CheckoutForm = {
   address: string;
   note: string;
 };
+
+type SavedAddress = Tables<"addresses">;
 
 const emptyForm: CheckoutForm = {
   customerName: "",
@@ -55,6 +58,8 @@ function CheckoutPage() {
     useState<Awaited<ReturnType<typeof supabase.auth.getSession>>["data"]["session"]>(null);
   const [authLoading, setAuthLoading] = useState(true);
   const [form, setForm] = useState<CheckoutForm>(emptyForm);
+  const [savedAddresses, setSavedAddresses] = useState<SavedAddress[]>([]);
+  const [selectedAddressId, setSelectedAddressId] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState("");
 
@@ -67,6 +72,37 @@ function CheckoutPage() {
 
       setSession(data.session);
       setForm((current) => ({ ...current, email: data.session?.user.email ?? "" }));
+
+      if (data.session) {
+        const { data: addresses, error: addressesError } = await supabase
+          .from("addresses")
+          .select("*")
+          .eq("user_id", data.session.user.id)
+          .order("is_default", { ascending: false })
+          .order("created_at", { ascending: false });
+
+        if (!mounted) return;
+
+        if (addressesError) {
+          setError(addressesError.message);
+        } else {
+          setSavedAddresses(addresses ?? []);
+
+          const defaultAddress = addresses?.[0];
+          if (defaultAddress) {
+            setSelectedAddressId(defaultAddress.id);
+            setForm((current) => ({
+              ...current,
+              customerName: defaultAddress.recipient_name,
+              phone: defaultAddress.phone,
+              city: defaultAddress.city,
+              postalCode: defaultAddress.postal_code,
+              address: defaultAddress.address_line,
+            }));
+          }
+        }
+      }
+
       setAuthLoading(false);
     };
 
@@ -140,6 +176,32 @@ function CheckoutPage() {
     setForm((current) => ({ ...current, [field]: value }));
   };
 
+  const handleAddressSelection = (addressId: string) => {
+    setSelectedAddressId(addressId);
+
+    const selectedAddress = savedAddresses.find((address) => address.id === addressId);
+    if (!selectedAddress) {
+      setForm((current) => ({
+        ...current,
+        customerName: "",
+        phone: "",
+        city: "",
+        postalCode: "",
+        address: "",
+      }));
+      return;
+    }
+
+    setForm((current) => ({
+      ...current,
+      customerName: selectedAddress.recipient_name,
+      phone: selectedAddress.phone,
+      city: selectedAddress.city,
+      postalCode: selectedAddress.postal_code,
+      address: selectedAddress.address_line,
+    }));
+  };
+
   if (done) {
     return (
       <div className="mx-auto max-w-xl px-4 py-20 text-center">
@@ -207,6 +269,24 @@ function CheckoutPage() {
         <div className="space-y-6">
           <section className="rounded-3xl border border-border bg-card p-6">
             <h2 className="font-display text-xl font-extrabold">Данни за доставка</h2>
+            {savedAddresses.length > 0 && (
+              <label className="mt-4 block text-sm font-bold">
+                Избери запазен адрес
+                <select
+                  value={selectedAddressId}
+                  onChange={(event) => handleAddressSelection(event.target.value)}
+                  className={inputClass}
+                >
+                  <option value="">Въведи нов адрес</option>
+                  {savedAddresses.map((savedAddress) => (
+                    <option key={savedAddress.id} value={savedAddress.id}>
+                      {savedAddress.recipient_name} — {savedAddress.address_line},{" "}
+                      {savedAddress.city}
+                    </option>
+                  ))}
+                </select>
+              </label>
+            )}
             <div className="mt-4 grid gap-4 sm:grid-cols-2">
               <label className="text-sm font-bold">
                 Име и фамилия
