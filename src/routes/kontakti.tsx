@@ -22,7 +22,7 @@ function ContactPage() {
   return (
     <div className="mx-auto max-w-4xl px-4 py-12">
       <h1 className="font-display text-4xl font-extrabold">Контакти</h1>
-      <p className="mt-2 text-muted-foreground">Имате въпрос за прежда или поръчка? Пишете ни — отговаряме бързо.</p>
+      <p className="mt-2 text-muted-foreground">Имате въпрос за продукт или поръчка? Пишете ни — отговаряме бързо.</p>
 
       <div className="mt-8 grid gap-8 md:grid-cols-2">
         <div className="space-y-4">
@@ -61,19 +61,19 @@ function ContactPage() {
               <h2 className="font-display text-xl font-extrabold">Напишете ни</h2>
               <label className="mt-4 block text-sm font-bold">
                 Вашето име
-                <input required className={inputClass} placeholder="Мария Иванова" />
+                <input required className={inputClass}/>
               </label>
               <label className="mt-4 block text-sm font-bold">
                 Имейл
-                <input required type="email" className={inputClass} placeholder="maria@email.bg" />
+                <input required type="email" className={inputClass}/>
               </label>
               <label className="mt-4 block text-sm font-bold">
                 Съобщение
-                <textarea required rows={5} className={inputClass} placeholder="Здравейте, имам въпрос за..." />
+                <textarea required rows={5} className={inputClass}/>
               </label>
               <button
                 type="submit"
-                className="mt-5 w-full rounded-full bg-primary px-6 py-3 font-extrabold text-primary-foreground transition-transform hover:scale-105"
+                className="mt-5 w-full rounded-full bg-primary px-6 py-3 font-extrabold text-primary-foreground transition-transform hover:scale-105 cursor-pointer"
               >
                 Изпрати
               </button>

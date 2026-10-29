@@ -132,7 +132,7 @@ function ProductPage() {
                       aria-pressed={selected}
                       className={`overflow-hidden rounded-xl border-2 bg-card p-0.5 transition-all ${
                         selected ? "border-primary ring-2 ring-primary/20" : "border-border hover:border-primary/60"
-                      }`}
+                      } cursor-pointer`}
                     >
                       <img src={variant.image} alt="" className="aspect-square w-full object-cover" />
                     </button>
@@ -155,13 +155,13 @@ function ProductPage() {
             <div className="flex items-center rounded-full border border-input bg-card">
               <button
                 onClick={() => setQty(Math.max(1, qty - 1))}
-                className="p-3 hover:text-primary"
+                className="p-3 hover:text-primary cursor-pointer"
                 aria-label="Намали количеството"
               >
                 <Minus className="h-4 w-4" />
               </button>
               <span className="w-8 text-center font-extrabold">{qty}</span>
-              <button onClick={() => setQty(qty + 1)} className="p-3 hover:text-primary" aria-label="Увеличи количеството">
+              <button onClick={() => setQty(qty + 1)} className="p-3 hover:text-primary cursor-pointer" aria-label="Увеличи количеството">
                 <Plus className="h-4 w-4" />
               </button>
             </div>
@@ -169,7 +169,7 @@ function ProductPage() {
               onClick={handleAdd}
               className={`inline-flex items-center gap-2 rounded-full px-8 py-3.5 font-extrabold transition-all ${
                 added ? "bg-skyblue text-skyblue-foreground" : "bg-primary text-primary-foreground hover:scale-105"
-              }`}
+              } cursor-pointer`}
             >
               {added ? (
                 <>

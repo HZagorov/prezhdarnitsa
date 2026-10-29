@@ -50,7 +50,7 @@ function AboutPage() {
           { num: "120+", label: "вида прежди" },
           { num: "100%", label: "ръчна изработка" },
         ].map((s) => (
-          <div key={s.label} className="rounded-3xl bg-card p-6 text-center">
+          <div key={s.label} className="rounded-3xl border bg-card p-6 text-center">
             <div className="font-display text-3xl font-extrabold text-primary">{s.num}</div>
             <div className="mt-1 text-sm text-muted-foreground">{s.label}</div>
           </div>

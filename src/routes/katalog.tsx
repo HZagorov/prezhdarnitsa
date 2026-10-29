@@ -68,7 +68,7 @@ function CatalogPage() {
       <div className="mt-6 flex flex-wrap items-center gap-3">
         <button
           onClick={() => navigate({ search: { kategoriq: "vsichki" } })}
-          className={`rounded-full px-4 py-2 text-sm font-extrabold transition-colors ${
+          className={`cursor-pointer rounded-full px-4 py-2 text-sm font-extrabold transition-colors ${
             kategoriq === "vsichki" ? "bg-primary text-primary-foreground" : "bg-card text-foreground hover:bg-muted"
           }`}
         >
@@ -78,7 +78,7 @@ function CatalogPage() {
           <button
             key={cat.id}
             onClick={() => navigate({ search: { kategoriq: cat.id } })}
-            className={`rounded-full px-4 py-2 text-sm font-extrabold transition-colors ${
+            className={`cursor-pointer rounded-full px-4 py-2 text-sm font-extrabold transition-colors ${
               kategoriq === cat.id ? "bg-primary text-primary-foreground" : "bg-card text-foreground hover:bg-muted"
             }`}
           >
@@ -95,7 +95,7 @@ function CatalogPage() {
             <button
               key={subCat.id}
               onClick={() => setSub(subCat.id)}
-              className={`rounded-full px-3 py-1.5 text-sm font-bold transition-colors ${
+              className={`cursor-pointer rounded-full px-3 py-1.5 text-sm font-bold transition-colors ${
                 sub === subCat.id ? "bg-secondary text-secondary-foreground" : "bg-card text-foreground hover:bg-muted"
               }`}
             >
@@ -115,7 +115,7 @@ function CatalogPage() {
             step={5}
             value={maxPrice}
             onChange={(e) => setMaxPrice(Number(e.target.value))}
-            className="accent-primary"
+            className="accent-primary cursor-pointer"
           />
         </label>
         <label className="flex items-center gap-2 text-sm font-bold">
@@ -123,7 +123,7 @@ function CatalogPage() {
           <select
             value={sort}
             onChange={(e) => setSort(e.target.value as Sort)}
-            className="rounded-xl border border-input bg-background px-3 py-1.5 text-sm"
+            className="rounded-xl border border-input bg-background px-3 py-1.5 text-sm cursor-pointer"
           >
             <option value="popular">Популярни</option>
             <option value="price-asc">Цена: ниска → висока</option>

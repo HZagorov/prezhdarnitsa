@@ -56,7 +56,7 @@ export function ProductCard({ product, variantCount }: { product: Product; varia
           </div>
           <button
             onClick={() => add(product.id)}
-            className="inline-flex items-center gap-1.5 rounded-full bg-primary px-3.5 py-2 text-xs font-extrabold text-primary-foreground transition-transform hover:scale-105"
+            className="inline-flex items-center gap-1.5 rounded-full bg-primary px-3.5 py-2 text-xs font-extrabold text-primary-foreground transition-transform hover:scale-105 cursor-pointer"
             aria-label={`Добави ${product.name} в количката`}
           >
             <ShoppingBasket className="h-4 w-4" />

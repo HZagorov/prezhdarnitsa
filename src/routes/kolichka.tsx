@@ -68,11 +68,11 @@ function CartPage() {
                 <span className="text-sm text-muted-foreground">{formatPrice(product.price)} / бр.</span>
                 <div className="mt-auto flex items-center justify-between gap-3">
                   <div className="flex items-center rounded-full border border-input">
-                    <button onClick={() => setQty(product.id, qty - 1)} className="p-2 hover:text-primary" aria-label="Намали">
+                    <button onClick={() => setQty(product.id, qty - 1)} className="p-2 hover:text-primary cursor-pointer" aria-label="Намали">
                       <Minus className="h-4 w-4" />
                     </button>
                     <span className="w-8 text-center text-sm font-extrabold">{qty}</span>
-                    <button onClick={() => setQty(product.id, qty + 1)} className="p-2 hover:text-primary" aria-label="Увеличи">
+                    <button onClick={() => setQty(product.id, qty + 1)} className="p-2 hover:text-primary cursor-pointer" aria-label="Увеличи">
                       <Plus className="h-4 w-4" />
                     </button>
                   </div>
@@ -80,7 +80,7 @@ function CartPage() {
                     <span className="font-extrabold text-primary">{formatPrice(product.price * qty)}</span>
                     <button
                       onClick={() => remove(product.id)}
-                      className="p-2 text-muted-foreground hover:text-destructive"
+                      className="p-2 text-muted-foreground hover:text-destructive cursor-pointer"
                       aria-label="Премахни"
                     >
                       <Trash2 className="h-4 w-4" />
