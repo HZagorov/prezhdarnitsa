@@ -10,6 +10,7 @@ export interface CartItem {
 interface CartContextValue {
   items: CartItem[];
   add: (productId: string, qty?: number) => void;
+  addVersion: number;
   remove: (productId: string) => void;
   setQty: (productId: string, qty: number) => void;
   clear: () => void;
@@ -24,6 +25,7 @@ const STORAGE_KEY = "prezhdi-cart";
 export function CartProvider({ children }: { children: ReactNode }) {
   const products = useProducts();
   const [items, setItems] = useState<CartItem[]>([]);
+  const [addVersion, setAddVersion] = useState(0);
   const [hydrated, setHydrated] = useState(false);
 
   useEffect(() => {
@@ -42,7 +44,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
     }
   }, [items, hydrated]);
 
-  const add = (productId: string, qty = 1) =>
+  const add = (productId: string, qty = 1) => {
     setItems((prev) => {
       const existing = prev.find((i) => i.productId === productId);
       if (existing) {
@@ -50,6 +52,8 @@ export function CartProvider({ children }: { children: ReactNode }) {
       }
       return [...prev, { productId, qty }];
     });
+    setAddVersion((version) => version + 1);
+  };
 
   const remove = (productId: string) => setItems((prev) => prev.filter((i) => i.productId !== productId));
 
@@ -68,7 +72,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
   const total = detailed.reduce((s, i) => s + i.product.price * i.qty, 0);
 
   return (
-    <CartContext.Provider value={{ items, add, remove, setQty, clear, count, total, detailed }}>
+    <CartContext.Provider value={{ items, add, addVersion, remove, setQty, clear, count, total, detailed }}>
       {children}
     </CartContext.Provider>
   );

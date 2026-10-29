@@ -1,7 +1,8 @@
 import { Link } from "@tanstack/react-router";
-import { ShoppingBasket } from "lucide-react";
+import { Check, ShoppingBasket } from "lucide-react";
 import { formatPrice, getProductFamilyName, type Product } from "@/lib/products";
 import { useCart } from "@/lib/cart";
+import { useState } from "react";
 
 const BADGE_STYLES: Record<string, string> = {
   "Ново": "bg-skyblue text-skyblue-foreground",
@@ -11,6 +12,14 @@ const BADGE_STYLES: Record<string, string> = {
 
 export function ProductCard({ product, variantCount }: { product: Product; variantCount?: number }) {
   const { add } = useCart();
+  const [added, setAdded] = useState(false);
+
+  const handleAdd = () => {
+    add(product.id);
+    setAdded(true);
+    setTimeout(() => setAdded(false), 1500);
+  };
+
   return (
     <div className="group flex flex-col overflow-hidden rounded-3xl border border-border bg-card shadow-sm transition-all hover:-translate-y-1 hover:shadow-lg">
       <Link
@@ -55,12 +64,28 @@ export function ProductCard({ product, variantCount }: { product: Product; varia
             )}
           </div>
           <button
-            onClick={() => add(product.id)}
-            className="inline-flex items-center gap-1.5 rounded-full bg-primary px-3.5 py-2 text-xs font-extrabold text-primary-foreground transition-transform hover:scale-105 cursor-pointer"
-            aria-label={`Добави ${product.name} в количката`}
+            type="button"
+            onClick={handleAdd}
+            className={`inline-flex cursor-pointer items-center gap-1.5 rounded-full px-3.5 py-2 text-xs font-extrabold transition-all hover:scale-105 active:scale-95 ${
+              added
+                ? "animate-in zoom-in-95 bg-skyblue text-skyblue-foreground"
+                : "bg-primary text-primary-foreground"
+            }`}
+            aria-label={
+              added ? `${product.name} е добавен в количката` : `Добави ${product.name} в количката`
+            }
           >
-            <ShoppingBasket className="h-4 w-4" />
-            Добави
+            {added ? (
+              <>
+                <Check className="h-4 w-4 animate-in zoom-in-50" />
+                Добавено!
+              </>
+            ) : (
+              <>
+                <ShoppingBasket className="h-4 w-4" />
+                Добави
+              </>
+            )}
           </button>
         </div>
       </div>

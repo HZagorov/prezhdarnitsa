@@ -147,11 +147,24 @@ const NAV = [
 ] as const;
 
 function CartButton() {
-  const { count } = useCart();
+  const { count, addVersion } = useCart();
+  const [isAnimating, setIsAnimating] = useState(false);
+
+  useEffect(() => {
+    if (addVersion === 0) return;
+
+    setIsAnimating(true);
+    const timeoutId = window.setTimeout(() => setIsAnimating(false), 700);
+
+    return () => window.clearTimeout(timeoutId);
+  }, [addVersion]);
+
   return (
     <Link
       to="/kolichka"
-      className="relative inline-flex items-center gap-2 rounded-full bg-primary px-4 py-2 text-sm font-bold text-primary-foreground transition-transform hover:scale-105"
+      className={`relative inline-flex items-center gap-2 rounded-full bg-primary px-4 py-2 text-sm font-bold text-primary-foreground transition-all hover:scale-105 ${
+        isAnimating ? "scale-110 ring-4 ring-primary/30 animate-pulse" : ""
+      }`}
       aria-label="Количка"
     >
       <ShoppingBasket className="h-5 w-5" />
