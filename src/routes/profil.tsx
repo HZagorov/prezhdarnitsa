@@ -50,6 +50,8 @@ const paymentMethodLabels: Record<string, string> = {
   card: "Плащане с карта",
 };
 
+const requiredFieldMessage = "Моля, попълнете това поле.";
+
 export const Route = createFileRoute("/profil")({
   head: () => ({
     meta: [
@@ -178,10 +180,30 @@ function ProfilePage() {
     };
   }, []);
 
+  const getMissingProfileFieldsMessage = () => {
+    const missingFields = [
+      !(email ?? "").trim() && "имейл адрес",
+      !firstName.trim() && "име",
+      !lastName.trim() && "фамилия",
+      !phone.trim() && "телефон",
+    ].filter((field): field is string => Boolean(field));
+
+    return missingFields.length > 0
+      ? `Моля, попълнете следните полета: ${missingFields.join(", ")}.`
+      : "";
+  };
+
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     setMessage("");
     setError("");
+
+    const missingFieldsMessage = getMissingProfileFieldsMessage();
+
+    if (missingFieldsMessage) {
+      setError(missingFieldsMessage);
+      return;
+    }
 
     if (!userId) {
       setError("Моля, влезте в профила си, за да запазите данните.");
@@ -385,52 +407,81 @@ function ProfilePage() {
         </Button>
 
         {activeSection === "profile" && (
-          <form className="mt-8 space-y-5" onSubmit={handleSubmit}>
+          <form
+            className="mt-8 space-y-5"
+            onSubmit={handleSubmit}
+            onInvalid={() => setError(getMissingProfileFieldsMessage())}
+          >
             <div className="space-y-2">
-              <Label htmlFor="profile-email">Имейл адрес</Label>
+              <Label htmlFor="profile-email">
+                Имейл адрес <span className="text-destructive">*</span>
+              </Label>
               <Input
                 id="profile-email"
                 type="email"
                 value={email ?? ""}
                 readOnly
+                required
+                onInvalid={(event) => event.currentTarget.setCustomValidity(requiredFieldMessage)}
                 className="h-11 rounded-xl bg-muted"
               />
               {/* <p className="text-xs text-muted-foreground">Имейлът се управлява от Supabase Auth.</p> */}
             </div>
             <div className="grid gap-4 sm:grid-cols-2">
               <div className="space-y-2">
-                <Label htmlFor="first-name">Име</Label>
+                <Label htmlFor="first-name">
+                  Име <span className="text-destructive">*</span>
+                </Label>
                 <Input
                   id="first-name"
                   type="text"
                   autoComplete="given-name"
                   value={firstName}
-                  onChange={(event) => setFirstName(event.target.value)}
+                  onChange={(event) => {
+                    event.currentTarget.setCustomValidity("");
+                    setFirstName(event.target.value);
+                  }}
+                  onInvalid={(event) => event.currentTarget.setCustomValidity(requiredFieldMessage)}
                   className="h-11 rounded-xl"
+                  required
                 />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="last-name">Фамилия</Label>
+                <Label htmlFor="last-name">
+                  Фамилия <span className="text-destructive">*</span>
+                </Label>
                 <Input
                   id="last-name"
                   type="text"
                   autoComplete="family-name"
                   value={lastName}
-                  onChange={(event) => setLastName(event.target.value)}
+                  onChange={(event) => {
+                    event.currentTarget.setCustomValidity("");
+                    setLastName(event.target.value);
+                  }}
+                  onInvalid={(event) => event.currentTarget.setCustomValidity(requiredFieldMessage)}
                   className="h-11 rounded-xl"
+                  required
                 />
               </div>
             </div>
             <div className="space-y-2">
-              <Label htmlFor="phone">Телефон</Label>
+              <Label htmlFor="phone">
+                Телефон <span className="text-destructive">*</span>
+              </Label>
               <Input
                 id="phone"
                 type="tel"
                 autoComplete="tel"
                 placeholder={/*"0888 123 456" */ undefined}
                 value={phone}
-                onChange={(event) => setPhone(event.target.value)}
+                onChange={(event) => {
+                  event.currentTarget.setCustomValidity("");
+                  setPhone(event.target.value);
+                }}
+                onInvalid={(event) => event.currentTarget.setCustomValidity(requiredFieldMessage)}
                 className="h-11 rounded-xl"
+                required
               />
             </div>
 
