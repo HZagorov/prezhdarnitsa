@@ -1,6 +1,6 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
-import { CheckCircle2, LogOut, MapPin, UserRound } from "lucide-react";
+import { CheckCircle2, LogOut, MapPin, Trash2, UserRound } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -72,6 +72,8 @@ function ProfilePage() {
   const [addresses, setAddresses] = useState<SavedAddress[]>([]);
   const [orders, setOrders] = useState<OrderWithItems[]>([]);
   const [addressForm, setAddressForm] = useState<AddressForm>(emptyAddress);
+  const [editingAddressId, setEditingAddressId] = useState<string | null>(null);
+  const [deletingAddressId, setDeletingAddressId] = useState<string | null>(null);
   const [activeSection, setActiveSection] = useState<ProfileSection>("profile");
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -239,20 +241,32 @@ function ProfilePage() {
     }
 
     setSavingAddress(true);
-    const { data, error: saveError } = await supabase
-      .from("addresses")
-      .insert({
-        user_id: userId,
-        recipient_name: addressForm.recipientName.trim(),
-        phone: addressForm.phone.trim(),
-        city: addressForm.city.trim(),
-        postal_code: addressForm.postalCode.trim(),
-        address_line: addressForm.addressLine.trim(),
-        notes: addressForm.notes.trim() || null,
-        is_default: addresses.length === 0,
-      })
-      .select()
-      .single();
+    const addressValues = {
+      recipient_name: addressForm.recipientName.trim(),
+      phone: addressForm.phone.trim(),
+      city: addressForm.city.trim(),
+      postal_code: addressForm.postalCode.trim(),
+      address_line: addressForm.addressLine.trim(),
+      notes: addressForm.notes.trim() || null,
+    };
+
+    const { data, error: saveError } = editingAddressId
+      ? await supabase
+          .from("addresses")
+          .update(addressValues)
+          .eq("id", editingAddressId)
+          .eq("user_id", userId)
+          .select()
+          .single()
+      : await supabase
+          .from("addresses")
+          .insert({
+            user_id: userId,
+            ...addressValues,
+            is_default: addresses.length === 0,
+          })
+          .select()
+          .single();
     setSavingAddress(false);
 
     if (saveError) {
@@ -260,9 +274,86 @@ function ProfilePage() {
       return;
     }
 
-    setAddresses((current) => [data, ...current]);
+    setAddresses((current) =>
+      editingAddressId
+        ? current.map((address) => (address.id === editingAddressId ? data : address))
+        : [data, ...current],
+    );
     setAddressForm(emptyAddress);
-    setAddressMessage("Адресът е добавен успешно.");
+    setEditingAddressId(null);
+    setAddressMessage(
+      editingAddressId ? "Адресът е променен успешно." : "Адресът е добавен успешно.",
+    );
+  };
+
+  const handleEditAddress = (address: SavedAddress) => {
+    setEditingAddressId(address.id);
+    setAddressForm({
+      recipientName: address.recipient_name,
+      phone: address.phone,
+      city: address.city,
+      postalCode: address.postal_code,
+      addressLine: address.address_line,
+      notes: address.notes ?? "",
+    });
+    setAddressMessage("");
+    setError("");
+    document.getElementById("address-form")?.scrollIntoView({ behavior: "smooth", block: "start" });
+  };
+
+  const handleCancelAddressEdit = () => {
+    setEditingAddressId(null);
+    setAddressForm(emptyAddress);
+    setAddressMessage("");
+    setError("");
+  };
+
+  const handleDeleteAddress = async (address: SavedAddress) => {
+    if (!userId || !window.confirm("Сигурни ли сте, че искате да изтриете този адрес?")) return;
+
+    setDeletingAddressId(address.id);
+    setAddressMessage("");
+    setError("");
+
+    const { error: deleteError } = await supabase
+      .from("addresses")
+      .delete()
+      .eq("id", address.id)
+      .eq("user_id", userId);
+
+    if (deleteError) {
+      setDeletingAddressId(null);
+      setError(deleteError.message);
+      return;
+    }
+
+    const remainingAddresses = addresses.filter((current) => current.id !== address.id);
+
+    if (address.is_default && remainingAddresses.length > 0) {
+      const nextDefaultAddress = remainingAddresses[0];
+      const { error: defaultError } = await supabase
+        .from("addresses")
+        .update({ is_default: true })
+        .eq("id", nextDefaultAddress.id)
+        .eq("user_id", userId);
+
+      if (defaultError) {
+        setDeletingAddressId(null);
+        setError(defaultError.message);
+        return;
+      }
+
+      remainingAddresses[0] = { ...nextDefaultAddress, is_default: true };
+    }
+
+    setAddresses(remainingAddresses);
+    setDeletingAddressId(null);
+
+    if (editingAddressId === address.id) {
+      handleCancelAddressEdit();
+    }
+
+    setAddressMessage("Адресът е изтрит успешно.");
   };
 
   const getMissingAddressFieldsMessage = () => {
@@ -590,12 +681,19 @@ function ProfilePage() {
             <div className="flex items-center gap-3">
               <MapPin className="h-6 w-6 text-primary" />
               <div>
-                <h2 className="font-display text-2xl font-extrabold">Добави адрес</h2>
-                <p className="text-sm text-muted-foreground">Запазете адрес за доставка.</p>
+                <h2 className="font-display text-2xl font-extrabold">
+                  {editingAddressId ? "Редактирай адрес" : "Добави адрес"}
+                </h2>
+                <p className="text-sm text-muted-foreground">
+                  {editingAddressId
+                    ? "Променете данните за адреса."
+                    : "Запазете адрес за доставка."}
+                </p>
               </div>
             </div>
 
             <form
+              id="address-form"
               className="mt-6 space-y-4"
               onSubmit={handleAddressSubmit}
               onInvalid={() => setError(getMissingAddressFieldsMessage())}
@@ -712,14 +810,32 @@ function ProfilePage() {
                   className="h-11 rounded-xl"
                 />
               </div>
-              <Button
-                type="submit"
-                disabled={savingAddress}
-                variant={/* variant="outline" */ undefined}
-                className="h-11 w-full rounded-full font-extrabold"
-              >
-                {savingAddress ? "Добавяне…" : "Добави адрес"}
-              </Button>
+              <div className="flex gap-3">
+                <Button
+                  type="submit"
+                  disabled={savingAddress}
+                  variant={/* variant="outline" */ undefined}
+                  className="h-11 flex-1 rounded-full font-extrabold"
+                >
+                  {savingAddress
+                    ? editingAddressId
+                      ? "Запазване…"
+                      : "Добавяне…"
+                    : editingAddressId
+                      ? "Запази адреса"
+                      : "Добави адрес"}
+                </Button>
+                {editingAddressId && (
+                  <Button
+                    type="button"
+                    variant="outline"
+                    onClick={handleCancelAddressEdit}
+                    className="h-11 rounded-full"
+                  >
+                    Отказ
+                  </Button>
+                )}
+              </div>
               {error && (
                 <p className="rounded-xl bg-destructive/10 px-3 py-2 text-sm text-destructive">
                   {error}
@@ -736,11 +852,18 @@ function ProfilePage() {
               <div className="mt-8 space-y-3 border-t border-border pt-8">
                 <h3 className="font-display text-xl font-extrabold">Запазени адреси</h3>
                 {addresses.map((address) => (
-                  <button
-                    type="button"
+                  <div
                     key={address.id}
-                    onClick={() => void handleSetDefaultAddress(address.id)}
+                    role="button"
+                    tabIndex={0}
                     aria-pressed={address.is_default}
+                    onClick={() => void handleSetDefaultAddress(address.id)}
+                    onKeyDown={(event) => {
+                      if (event.key === "Enter" || event.key === " ") {
+                        event.preventDefault();
+                        void handleSetDefaultAddress(address.id);
+                      }
+                    }}
                     className={`w-full cursor-pointer rounded-2xl border-2 p-4 text-left text-sm transition-colors ${
                       address.is_default
                         ? "border-primary bg-muted"
@@ -764,7 +887,31 @@ function ProfilePage() {
                     </p>
                     <p className="mt-1 text-muted-foreground">{address.phone}</p>
                     {address.notes && <p className="mt-1 text-muted-foreground">{address.notes}</p>}
-                  </button>
+                    <div className="mt-4 flex flex-wrap gap-2">
+                      <button
+                        type="button"
+                        onClick={(event) => {
+                          event.stopPropagation();
+                          handleEditAddress(address);
+                        }}
+                        className="cursor-pointer rounded-full bg-primary px-4 py-2 text-sm font-extrabold text-primary-foreground transition-transform hover:scale-105"
+                      >
+                        Редактирай
+                      </button>
+                      <button
+                        type="button"
+                        disabled={deletingAddressId === address.id}
+                        onClick={(event) => {
+                          event.stopPropagation();
+                          void handleDeleteAddress(address);
+                        }}
+                        className="inline-flex cursor-pointer items-center gap-2 rounded-full border border-destructive px-4 py-2 text-sm font-extrabold text-destructive transition-colors hover:bg-destructive hover:text-destructive-foreground disabled:cursor-not-allowed disabled:opacity-60"
+                      >
+                        <Trash2 className="h-4 w-4" />
+                        {deletingAddressId === address.id ? "Изтриване…" : "Изтрий"}
+                      </button>
+                    </div>
+                  </div>
                 ))}
               </div>
             )}
