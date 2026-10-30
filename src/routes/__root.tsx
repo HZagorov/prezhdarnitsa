@@ -272,6 +272,14 @@ function Header() {
                   </Link>
                 </DropdownMenuItem>
                 <DropdownMenuItem
+                  asChild
+                  className="cursor-pointer transition-transform hover:scale-105 hover:bg-primary hover:text-primary-foreground focus:bg-primary focus:text-primary-foreground"
+                >
+                  <Link to="/admin/products">
+                    <ShoppingBasket /> Управление на продукти
+                  </Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem
                   onClick={handleSignOut}
                   className="cursor-pointer transition-transform hover:scale-105 hover:bg-primary hover:text-primary-foreground focus:bg-primary focus:text-primary-foreground"
                 >

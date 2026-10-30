@@ -17,6 +17,7 @@ import { Route as PorachkaRouteImport } from './routes/porachka'
 import { Route as ProfilRouteImport } from './routes/profil'
 import { Route as VhodRouteImport } from './routes/vhod'
 import { Route as ZaNasRouteImport } from './routes/za-nas'
+import { Route as AdminProductsRouteImport } from './routes/admin/products'
 import { Route as ProduktIdRouteImport } from './routes/produkt.$id'
 
 const IndexRoute = IndexRouteImport.update({
@@ -59,6 +60,11 @@ const ZaNasRoute = ZaNasRouteImport.update({
   path: '/za-nas',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AdminProductsRoute = AdminProductsRouteImport.update({
+  id: '/admin/products',
+  path: '/admin/products',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ProduktIdRoute = ProduktIdRouteImport.update({
   id: '/produkt/$id',
   path: '/produkt/$id',
@@ -74,6 +80,7 @@ export interface FileRoutesByFullPath {
   '/profil': typeof ProfilRoute
   '/vhod': typeof VhodRoute
   '/za-nas': typeof ZaNasRoute
+  '/admin/products': typeof AdminProductsRoute
   '/produkt/$id': typeof ProduktIdRoute
 }
 export interface FileRoutesByTo {
@@ -85,6 +92,7 @@ export interface FileRoutesByTo {
   '/profil': typeof ProfilRoute
   '/vhod': typeof VhodRoute
   '/za-nas': typeof ZaNasRoute
+  '/admin/products': typeof AdminProductsRoute
   '/produkt/$id': typeof ProduktIdRoute
 }
 export interface FileRoutesById {
@@ -97,6 +105,7 @@ export interface FileRoutesById {
   '/profil': typeof ProfilRoute
   '/vhod': typeof VhodRoute
   '/za-nas': typeof ZaNasRoute
+  '/admin/products': typeof AdminProductsRoute
   '/produkt/$id': typeof ProduktIdRoute
 }
 export interface FileRouteTypes {
@@ -110,6 +119,7 @@ export interface FileRouteTypes {
     | '/profil'
     | '/vhod'
     | '/za-nas'
+    | '/admin/products'
     | '/produkt/$id'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -121,6 +131,7 @@ export interface FileRouteTypes {
     | '/profil'
     | '/vhod'
     | '/za-nas'
+    | '/admin/products'
     | '/produkt/$id'
   id:
     | '__root__'
@@ -132,6 +143,7 @@ export interface FileRouteTypes {
     | '/profil'
     | '/vhod'
     | '/za-nas'
+    | '/admin/products'
     | '/produkt/$id'
   fileRoutesById: FileRoutesById
 }
@@ -144,6 +156,7 @@ export interface RootRouteChildren {
   ProfilRoute: typeof ProfilRoute
   VhodRoute: typeof VhodRoute
   ZaNasRoute: typeof ZaNasRoute
+  AdminProductsRoute: typeof AdminProductsRoute
   ProduktIdRoute: typeof ProduktIdRoute
 }
 
@@ -205,6 +218,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ZaNasRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/admin/products': {
+      id: '/admin/products'
+      path: '/admin/products'
+      fullPath: '/admin/products'
+      preLoaderRoute: typeof AdminProductsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/produkt/$id': {
       id: '/produkt/$id'
       path: '/produkt/$id'
@@ -224,6 +244,7 @@ const rootRouteChildren: RootRouteChildren = {
   ProfilRoute: ProfilRoute,
   VhodRoute: VhodRoute,
   ZaNasRoute: ZaNasRoute,
+  AdminProductsRoute: AdminProductsRoute,
   ProduktIdRoute: ProduktIdRoute,
 }
 export const routeTree = rootRouteImport
