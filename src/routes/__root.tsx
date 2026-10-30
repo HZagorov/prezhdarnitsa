@@ -250,12 +250,18 @@ function Header() {
               <DropdownMenuContent align="end" className="w-52">
                 <DropdownMenuLabel className="truncate">{signedInEmail}</DropdownMenuLabel>
                 <DropdownMenuSeparator />
-                <DropdownMenuItem asChild>
+                <DropdownMenuItem
+                  asChild
+                  className="cursor-pointer transition-transform hover:scale-105 hover:bg-primary hover:text-primary-foreground focus:bg-primary focus:text-primary-foreground"
+                >
                   <Link to="/profil">
                     <UserRound /> Моят профил
                   </Link>
                 </DropdownMenuItem>
-                <DropdownMenuItem onClick={handleSignOut}>
+                <DropdownMenuItem
+                  onClick={handleSignOut}
+                  className="cursor-pointer transition-transform hover:scale-105 hover:bg-primary hover:text-primary-foreground focus:bg-primary focus:text-primary-foreground"
+                >
                   <LogOut /> Изход
                 </DropdownMenuItem>
               </DropdownMenuContent>
