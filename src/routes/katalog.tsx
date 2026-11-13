@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
-import { CATEGORIES, formatPrice, getProductFamilyKey, YARN_SUBCATEGORIES, type Category } from "@/lib/products";
+import { CATEGORIES, formatPrice, getProductFamilyKey, type Category } from "@/lib/products";
 import { useProducts } from "@/lib/products-context";
 import { ProductCard } from "@/components/ProductCard";
 
@@ -28,6 +28,11 @@ function CatalogPage() {
   const products = useProducts();
   const { kategoriq } = Route.useSearch();
   const navigate = Route.useNavigate();
+  const subcategories = useMemo(() => {
+    if (kategoriq === "vsichki") return [];
+    const ids = [...new Set(products.filter((product) => product.category === kategoriq && product.sub).map((product) => product.sub as string))];
+    return ids.map((id) => ({ id, name: id }));
+  }, [products, kategoriq]);
   const [sort, setSort] = useState<Sort>("popular");
   const [maxPrice, setMaxPrice] = useState(100);
   const [sub, setSub] = useState<string>("vsichki");
@@ -35,7 +40,7 @@ function CatalogPage() {
   const filtered = useMemo(() => {
     let list = products.filter((p) => p.price <= maxPrice);
     if (kategoriq !== "vsichki") list = list.filter((p) => p.category === kategoriq);
-    if (kategoriq === "prezhdi" && sub !== "vsichki") list = list.filter((p) => p.sub === sub);
+    if (kategoriq !== "vsichki" && sub !== "vsichki") list = list.filter((p) => p.sub === sub);
     switch (sort) {
       case "price-asc":
         return [...list].sort((a, b) => a.price - b.price);
@@ -77,7 +82,7 @@ function CatalogPage() {
         {CATEGORIES.map((cat) => (
           <button
             key={cat.id}
-            onClick={() => navigate({ search: { kategoriq: cat.id } })}
+            onClick={() => { setSub("vsichki"); void navigate({ search: { kategoriq: cat.id } }); }}
             className={`cursor-pointer rounded-full px-4 py-2 text-sm font-extrabold transition-colors ${
               kategoriq === cat.id ? "bg-primary text-primary-foreground" : "bg-card text-foreground hover:bg-muted"
             }`}
@@ -87,11 +92,11 @@ function CatalogPage() {
         ))}
       </div>
 
-      {/* Подкатегории за прежди */}
-      {kategoriq === "prezhdi" && (
+      {/* Add the subcategories buttons */}
+      {kategoriq !== "vsichki" && subcategories.length > 0 && (
         <div className="mt-3 flex flex-wrap items-center gap-2 pl-2">
           <span className="text-sm font-bold text-muted-foreground">Подкатегория:</span>
-          {[{ id: "vsichki", name: "Всички" }, ...YARN_SUBCATEGORIES].map((subCat) => (
+          {[{ id: "vsichki", name: "Всички" }, ...subcategories].map((subCat) => (
             <button
               key={subCat.id}
               onClick={() => setSub(subCat.id)}

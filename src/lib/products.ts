@@ -11,11 +11,6 @@ export const CATEGORIES: { id: Category; name: string; description: string }[] =
   { id: "aksesoari", name: "Аксесоари", description: "Куки, дръжки, основи и всичко за вашите проекти" },
 ];
 
-export const YARN_SUBCATEGORIES: { id: string; name: string }[] = [
-  { id: "pamuk", name: "100% памук" },
-  { id: "vlna", name: "100% вълна" },
-];
-
 export interface Product {
   id: string;
   name: string;
