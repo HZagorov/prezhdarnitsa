@@ -4,6 +4,7 @@ import {
   Link,
   createRootRouteWithContext,
   useRouter,
+  useNavigate,
   HeadContent,
   Scripts,
 } from "@tanstack/react-router";
@@ -181,6 +182,7 @@ function CartButton() {
 function Header() {
   const [open, setOpen] = useState(false);
   const [signedInEmail, setSignedInEmail] = useState<string | null>(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     let mounted = true;
@@ -202,6 +204,7 @@ function Header() {
   const handleSignOut = async () => {
     await supabase.auth.signOut();
     setSignedInEmail(null);
+    await navigate({ to: "/" });
   };
 
   return (
