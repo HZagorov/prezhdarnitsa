@@ -313,8 +313,16 @@ function AdminProductsPage() {
             <div className="grid gap-4 sm:grid-cols-2">
               <Field label="ID" value={form.id} onChange={(value) => updateForm("id", value)} disabled={Boolean(products.find((product) => product.id === form.id))} />
               <Field label="Име" value={form.name} onChange={(value) => updateForm("name", value)} />
-              <Field label="Категория" value={form.category} onChange={(value) => updateForm("category", value)} placeholder="prezhdi / makrame / gotovi / aksesoari" />
-              <Field label="Подкатегория" value={form.subcategory} onChange={(value) => updateForm("subcategory", value)} />
+              <div>
+                <Label htmlFor="category">Категория</Label>
+                <select id="category" className="mt-1 flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm" value={form.category} onChange={(event) => updateForm("category", event.target.value)}>
+                  <option value="prezhdi">Прежди</option>
+                  <option value="makrame">Макраме</option>
+                  <option value="gotovi">Готови артикули</option>
+                  <option value="aksesoari">Аксесоари</option>
+                </select>
+              </div>
+              <Field label="Подкатегория" value={form.subcategory} onChange={(value) => updateForm("subcategory", value)} placeholder="100% памук / 100% вълна" />
               <Field label="Цена (€)" type="number" step="0.01" value={form.price} onChange={(value) => updateForm("price", value)} />
               <Field label="Стара цена (€)" type="number" step="0.01" value={form.oldPrice} onChange={(value) => updateForm("oldPrice", value)} />
               <Field label="Основна снимка (image key)" value={form.imageKey} onChange={(value) => updateForm("imageKey", value)} fixedLabelHeight />
